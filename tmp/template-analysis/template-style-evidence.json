@@ -1,0 +1,110 @@
+{
+  "input": "\\\\172.26.65.126\\BirouIT\\2026\\CSS\\! CSS - creare cont MODEL.docx",
+  "fonts_by_char_count": {
+    "Cambria": 1532
+  },
+  "direct_run_formatting_runs": 211,
+  "direct_paragraph_formatting_paragraphs": 34,
+  "heading_like_paragraphs_not_heading_style": [
+    {
+      "para_index": 11,
+      "text": "Informa\u021bii generale ",
+      "style": "List 2"
+    },
+    {
+      "para_index": 14,
+      "text": "Nume ______________________  Ini\u021biala  _ _ __",
+      "style": "List 2"
+    },
+    {
+      "para_index": 15,
+      "text": "Prenume (complet) ______________________",
+      "style": "List 2"
+    },
+    {
+      "para_index": 16,
+      "text": "Compania/Firma*: ______________________________",
+      "style": "List 2"
+    },
+    {
+      "para_index": 17,
+      "text": "Func\u021bie*: __________________________________________",
+      "style": "List 2"
+    },
+    {
+      "para_index": 18,
+      "text": "Loca\u021bia*: __________________________________________",
+      "style": "List 2"
+    },
+    {
+      "para_index": 19,
+      "text": "Central    Regional  ______   Unitate     __________________________",
+      "style": "List 2"
+    },
+    {
+      "para_index": 21,
+      "text": "\u0218ef direct* ________________________________________",
+      "style": "List 2"
+    }
+  ],
+  "examples": {
+    "direct_paragraph_formatting": [
+      {
+        "para_index": 1,
+        "text": "COMAND\u0102 SERVICII SUPLIMENTARE",
+        "style": "List 2"
+      },
+      {
+        "para_index": 3,
+        "text": "",
+        "style": "List 2"
+      },
+      {
+        "para_index": 4,
+        "text": "",
+        "style": "List 2"
+      },
+      {
+        "para_index": 5,
+        "text": "BENEFICIAR*:\t",
+        "style": "List 2"
+      },
+      {
+        "para_index": 6,
+        "text": "Reprezentant autorizat:",
+        "style": "List 2"
+      }
+    ],
+    "direct_run_formatting": [
+      {
+        "para_index": 1,
+        "run_text": "COMAND",
+        "style": "List 2"
+      },
+      {
+        "para_index": 1,
+        "run_text": "\u0102",
+        "style": "List 2"
+      },
+      {
+        "para_index": 1,
+        "run_text": " SERVICII SUPLIMENTARE",
+        "style": "List 2"
+      },
+      {
+        "para_index": 2,
+        "run_text": "Nr. ",
+        "style": "Header"
+      },
+      {
+        "para_index": 2,
+        "run_text": "IS 6",
+        "style": "Header"
+      }
+    ]
+  },
+  "notes": [
+    "Direct formatting is not always wrong, but it often causes inconsistent output when templates change.",
+    "Heading-like paragraphs not using Heading styles can break TOC and accessibility."
+  ]
+}
