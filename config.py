@@ -5,6 +5,8 @@ BASE_DIR = Path(__file__).resolve().parent
 OUTPUT_DIR = BASE_DIR / "output"
 OUTPUT_DIR.mkdir(exist_ok=True)
 
+VERSION = "2.1.0"
+
 class Config:
     SECRET_KEY = os.getenv("SECRET_KEY", "change-this-local-secret")
     PERSOANE_DB_PATH = os.getenv("PERSOANE_DB_PATH", r"C:\DevTools\_comun\persoane.db")

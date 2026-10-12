@@ -1,6 +1,50 @@
 .env
 .venv/
+venv/
 __pycache__/
 *.py[cod]
-output/*.pdf
-persoane.db
+output/
+instance/
+*.db
+*.db-wal
+*.db-shm
+
+# --- Secrete și configurări locale (NU se urcă niciodată pe GitHub) ---
+.env
+.env.*
+!.env.example
+
+# --- Date și baze de date (conțin date personale / de producție) ---
+*.db
+*.db-shm
+*.db-wal
+*.sqlite
+*.sqlite3
+*.xls
+*.xlsx
+*.xlsm
+instance/
+uploads/
+database/
+output/
+temp/
+backup/
+backups/
+_arhiva*/
+*_backup_*/
+Claude outputs/
+logs/
+*.log
+*.zip
+
+# --- Python / medii ---
+.venv/
+venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# --- Sistem / editor ---
+Thumbs.db
+desktop.ini
+.vscode/

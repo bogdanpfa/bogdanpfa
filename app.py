@@ -1,15 +1,16 @@
 import os
+import subprocess
 from datetime import date
 from pathlib import Path
 from flask import Flask, jsonify, render_template, request, send_file
 from dotenv import load_dotenv
 
 load_dotenv(Path(__file__).resolve().parent / ".env")
-from config import Config, OUTPUT_DIR
+from config import Config, OUTPUT_DIR, VERSION
 
 os.environ.setdefault("PERSOANE_DB_PATH", Config.PERSOANE_DB_PATH)
 import persoane_repo as persoane
-from generators.pdf_generator import create_pdf
+from generators.docx_generator import genereaza_pdf
 
 app = Flask(__name__)
 app.config.from_object(Config)
@@ -18,7 +19,7 @@ app.config.from_object(Config)
 def index():
     return render_template("formular.html", settings={
         "beneficiar_nume": Config.BENEFICIAR_NUME, "beneficiar_functie": Config.BENEFICIAR_FUNCTIE,
-        "companie": Config.COMPANIE, "nr_prefix": Config.NR_PREFIX, "today": date.today().isoformat()})
+        "companie": Config.COMPANIE, "nr_prefix": Config.NR_PREFIX, "today": date.today().isoformat(), "versiune": VERSION})
 
 @app.get("/api/persoane")
 def search_people():
@@ -44,13 +45,25 @@ def pdf():
     data = request.get_json(silent=True) or {}
     if not data.get("numar_manual") or not str(data.get("numar_inregistrare", "")).strip():
         return jsonify({"error":"Activați numărul manual și completați numărul de înregistrare."}), 400
-    if not (data.get("telefon_cfr") or data.get("telefon_fix") or data.get("mobil") or data.get("telefon_ip") or data.get("fax_cfr")):
+    # Obligatoriu cel puțin un număr: Tel. CFR, Tel. fix sau Fax CFR (Mobil și Tel. IP nu se completează)
+    if not (data.get("telefon_cfr") or data.get("telefon_fix") or data.get("fax_cfr")):
         return jsonify({"error":"Completați cel puțin un număr de telefon."}), 400
+    servicii = data.get("servicii") or []
+    if "Adăugare" in servicii and "Ștergere" in servicii:
+        return jsonify({"error":"Adăugare și Ștergere nu pot fi selectate în același timp."}), 400
     data.update({"beneficiar_nume": Config.BENEFICIAR_NUME, "beneficiar_functie": Config.BENEFICIAR_FUNCTIE,
                  "companie": data.get("companie") or Config.COMPANIE, "nr_prefix": Config.NR_PREFIX})
     safe_name = "".join(c for c in f"Comanda_{data.get('numar_inregistrare')}_{data.get('nume','').strip()}" if c.isalnum() or c in "_-")
     target = OUTPUT_DIR / f"{safe_name or 'comanda_servicii'}.pdf"
-    create_pdf(data, target)
+    try:
+        genereaza_pdf(data, target)
+    except (FileNotFoundError, ValueError) as exc:
+        # LibreOffice lipsă sau câmp necunoscut în șablon: mesajul ajunge în pagină
+        return jsonify({"error": str(exc)}), 500
+    except subprocess.CalledProcessError as exc:
+        return jsonify({"error": "Conversia în PDF a eșuat (LibreOffice): " + (exc.stderr or b"").decode("utf8", "replace")[:200]}), 500
+    except subprocess.TimeoutExpired:
+        return jsonify({"error": "Conversia în PDF a durat prea mult. Închideți ferestrele LibreOffice rămase deschise și reîncercați."}), 500
     return send_file(target, as_attachment=True, download_name=target.name, mimetype="application/pdf")
 
 if __name__ == "__main__":
