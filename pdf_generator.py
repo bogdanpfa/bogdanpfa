@@ -1,7 +1,6 @@
 """
 Generare PDF pentru Ordin de Deplasare (Delegație) — A5 portrait, 2 pagini.
-Pagina 1: Față (datele ordinului)
-Pagina 2: Verso (decontul cheltuielilor)
+Pagina 1: Față   |   Pagina 2: Verso (decont cheltuieli)
 """
 import os
 import platform
@@ -11,8 +10,9 @@ from reportlab.lib.units import mm
 from reportlab.pdfgen.canvas import Canvas
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
+from reportlab.pdfbase.pdfmetrics import stringWidth
 
-# ── Fonturi Unicode (suport diacritice) ──────────────────────────────────────
+# ── Fonturi ───────────────────────────────────────────────────────────────────
 
 _fonturi_init = False
 
@@ -23,14 +23,22 @@ def _init_fonturi():
         return
     candidati = []
     if platform.system() == 'Windows':
+        # Cambria — serif formal, similar cu documentele oficiale
         candidati += [
-            (r'C:\Windows\Fonts\arial.ttf', r'C:\Windows\Fonts\arialbd.ttf'),
+            (r'C:\Windows\Fonts\cambria.ttf',  r'C:\Windows\Fonts\cambriab.ttf'),
+            (r'C:\Windows\Fonts\times.ttf',    r'C:\Windows\Fonts\timesbd.ttf'),
+            (r'C:\Windows\Fonts\arial.ttf',    r'C:\Windows\Fonts\arialbd.ttf'),
         ]
+    # Linux: Liberation Serif ≈ Times New Roman
     candidati += [
+        ('/usr/share/fonts/truetype/liberation/LiberationSerif-Regular.ttf',
+         '/usr/share/fonts/truetype/liberation/LiberationSerif-Bold.ttf'),
+        ('/usr/share/fonts/truetype/freefont/FreeSerif.ttf',
+         '/usr/share/fonts/truetype/freefont/FreeSerifBold.ttf'),
+        ('/usr/share/fonts/truetype/dejavu/DejaVuSerif.ttf',
+         '/usr/share/fonts/truetype/dejavu/DejaVuSerif-Bold.ttf'),
         ('/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf',
          '/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf'),
-        ('/usr/share/fonts/dejavu/DejaVuSans.ttf',
-         '/usr/share/fonts/dejavu/DejaVuSans-Bold.ttf'),
     ]
     for normal, bold in candidati:
         if os.path.exists(normal) and os.path.exists(bold):
@@ -38,7 +46,7 @@ def _init_fonturi():
             pdfmetrics.registerFont(TTFont('ODF-B', bold))
             _fonturi_init = True
             return
-    _fonturi_init = True  # fallback Helvetica
+    _fonturi_init = True
 
 
 def _f(bold=False):
@@ -50,19 +58,39 @@ def _f(bold=False):
         return 'Helvetica-Bold' if bold else 'Helvetica'
 
 
-# ── Constante layout A5 portrait (148×210 mm) ────────────────────────────────
+def wrap_text(text, max_mm, font_name, font_size):
+    """Împarte textul în linii care încap în max_mm lățime."""
+    if not text:
+        return []
+    max_pts = max_mm * mm
+    words = text.split()
+    lines, cur = [], ''
+    for word in words:
+        probe = (cur + ' ' + word).strip()
+        if stringWidth(probe, font_name, font_size) <= max_pts:
+            cur = probe
+        else:
+            if cur:
+                lines.append(cur)
+            cur = word
+    if cur:
+        lines.append(cur)
+    return lines or [text]
 
-PH = 210   # înălțime pagină mm
-PW = 148   # lățime pagină mm
+
+# ── Constante layout ──────────────────────────────────────────────────────────
+
+PH = 210   # mm înălțime A5
+PW = 148   # mm lățime A5
 ML = 5     # margine stânga
 MR = 143   # margine dreapta
-W = MR - ML  # 138 mm lățime utilă
+W  = MR - ML   # 138 mm lățime utilă
 
 
-# ── Helper de desenare ───────────────────────────────────────────────────────
+# ── Helper canvas ─────────────────────────────────────────────────────────────
 
 class D:
-    """Wrapper ReportLab canvas cu coordonate y de sus în jos (mm)."""
+    """Canvas wrapper cu y de sus în jos (mm)."""
 
     def __init__(self, c: Canvas):
         self.c = c
@@ -95,141 +123,130 @@ class D:
         else:
             self.c.drawString(xp, yp, s)
 
-    def rand(self, x, y, latime, eticheta, valoare, esz=6.5, vsz=8.5, et_latime=None):
-        """
-        Rând cu etichetă + linie punctată + valoare.
-        et_latime: lățimea etichetei în mm (auto dacă None)
-        """
-        if eticheta:
-            self.t(x, y, eticheta, sz=esz)
-        lx = x + (et_latime if et_latime is not None else len(eticheta) * esz * 0.42 + 1.5)
-        self.hline(lx, x + latime, y + 1.2, lw=0.3)
-        if valoare:
-            self.t(lx + 0.5, y, str(valoare), sz=vsz)
-
-    def rand_cont(self, x, y, latime, valoare, vsz=8.5):
-        """Rând fără etichetă (continuare)."""
-        self.hline(x, x + latime, y + 1.2, lw=0.3)
-        if valoare:
-            self.t(x + 0.5, y, str(valoare), sz=vsz)
+    def fill_rect(self, x, y, w, h, gray=0.92):
+        """Fundal gri deschis pentru header tabel."""
+        self.c.setFillColorRGB(gray, gray, gray)
+        self.c.setStrokeColorRGB(gray, gray, gray)
+        self.c.rect(x * mm, self._y(y + h), w * mm, h * mm, stroke=0, fill=1)
+        self.c.setFillColorRGB(0, 0, 0)
+        self.c.setStrokeColorRGB(0, 0, 0)
 
 
-# ── Pagina 1 (Față) ──────────────────────────────────────────────────────────
+# ── Pagina 1 (Față) ───────────────────────────────────────────────────────────
 
 def _p1(d: D, data):
     def g(k):
         v = data.get(k, '') or ''
         return v.strip() if isinstance(v, str) else str(v)
 
-    # ── 1. HEADER (y: 3–20) ──
-    d.box(ML, 3, W, 17, lw=0.8)
-    d.vline(90, 3, 20)
-    d.hline(90, MR, 11, lw=0.4)
+    # ── 1. HEADER (y: 3–27) ──────────────────────────────────────────────────
+    HDR_Y, HDR_H = 3, 24
+    d.box(ML, HDR_Y, W, HDR_H, lw=1.0)
+    d.vline(90, HDR_Y, HDR_Y + HDR_H, lw=0.6)
+    d.hline(90, MR, HDR_Y + 9, lw=0.4)
 
-    # Stânga: Unitatea
-    d.t(ML + 1, 8, 'Unitatea', sz=6.5)
-    d.hline(ML + 1, 88, 16, lw=0.3)
-    d.t(ML + 1, 14.5, g('unitatea'), sz=8.5)
+    # Stânga: Unitatea + subdiviziune
+    d.t(ML + 1, HDR_Y + 5, 'Unitatea', sz=6, bold=False)
+    unitate = g('unitatea')
+    subdiv  = g('subdiviziunea')
+
+    font_n = _f(False)
+    # Unitate (bold, 8.5pt)
+    d.t(ML + 1, HDR_Y + 11, unitate, sz=8.5, bold=True)
+    # Subdiviziune (normal, 6.5pt, max 2 rânduri)
+    if subdiv:
+        linii = wrap_text(subdiv, 83, font_n, 6.5)
+        for i, linie in enumerate(linii[:2]):
+            d.t(ML + 1, HDR_Y + 16 + i * 5.5, linie, sz=6.5)
 
     # Dreapta: Depus decontul
-    d.t(91, 7.5, 'Depus decontul (nr. și data)', sz=6.5)
-    d.hline(91, MR - 1, 16, lw=0.3)
-    d.t(91, 14.5, g('depus_decont'), sz=8)
+    d.t(91, HDR_Y + 5, 'Depus decontul (nr. și data)', sz=6)
+    d.hline(91, MR - 1, HDR_Y + 18, lw=0.3)
+    d.t(91, HDR_Y + 16, g('depus_decont'), sz=8)
 
-    # ── 2. TITLU (y: 20–40) ──
-    d.box(ML, 20, W, 20, lw=0.8)
-    d.t(PW / 2, 31, 'ORDIN DE DEPLASARE (DELEGAȚIE)', sz=10, bold=True, align='c')
-    d.t(PW / 2, 38, 'Nr. ' + g('nr_ordin'), sz=9, align='c')
+    # ── 2. TITLU (y: 27–46) ──────────────────────────────────────────────────
+    TTL_Y = HDR_Y + HDR_H
+    d.box(ML, TTL_Y, W, 19, lw=1.0)
+    d.t(PW / 2, TTL_Y + 10, 'ORDIN DE DEPLASARE (DELEGAȚIE)', sz=10, bold=True, align='c')
+    d.t(PW / 2, TTL_Y + 17, 'Nr. ' + g('nr_ordin'), sz=9, align='c')
 
-    # ── 3. DATE DELEGAT (y: 40–126) ──
-    d.box(ML, 40, W, 86, lw=0.8)
+    # ── 3. DATE DELEGAT (y: 46–126) ──────────────────────────────────────────
+    CNT_Y = TTL_Y + 19
+    d.box(ML, CNT_Y, W, 80, lw=1.0)
 
-    # Dl./D-na
+    def rand(y_rel, eticheta, valoare, et_mm):
+        """Rând cu etichetă fixă + linie + valoare."""
+        y = CNT_Y + y_rel
+        d.t(ML + 1, y, eticheta, sz=6.5)
+        d.hline(ML + et_mm, MR - 1, y + 1.3, lw=0.3)
+        if valoare:
+            d.t(ML + et_mm + 0.5, y, str(valoare), sz=8.5)
+
+    def rand_cont(y_rel, valoare):
+        y = CNT_Y + y_rel
+        d.hline(ML + 1, MR - 1, y + 1.3, lw=0.3)
+        if valoare:
+            d.t(ML + 1.5, y, str(valoare), sz=8.5)
+
     titlu = g('titlu') or 'Dl.'
-    d.t(ML + 1, 48.5, titlu, sz=6.5)
-    d.hline(ML + 1 + len(titlu) * 2.5, MR - 1, 49.5, lw=0.3)
-    d.t(ML + 1 + len(titlu) * 2.5 + 1, 48, g('nume_prenume'), sz=8.5)
+    rand(8,  titlu,                  g('nume_prenume'),  len(titlu) * 2.8 + 2)
+    rand(17, 'având funcția de',     g('functia'),       37)
+    rand(26, 'este delegat/delegată pentru', g('scop_1'), 57)
+    rand_cont(35, g('scop_2'))
+    rand_cont(44, g('scop_3'))
+    rand(53, 'la',                   g('dest_1'),        6)
+    rand_cont(62, g('dest_2'))
 
-    # Funcția
-    d.t(ML + 1, 57.5, 'având funcția de', sz=6.5)
-    d.hline(ML + 36, MR - 1, 58.5, lw=0.3)
-    d.t(ML + 37, 57, g('functia'), sz=8.5)
-
-    # Scopul — 3 linii
-    d.t(ML + 1, 66.5, 'este delegat/delegată pentru', sz=6.5)
-    d.hline(ML + 56, MR - 1, 67.5, lw=0.3)
-    scop1 = g('scop_1')
-    if scop1:
-        d.t(ML + 57, 66, scop1, sz=8.5)
-    d.hline(ML + 1, MR - 1, 76.5, lw=0.3)
-    scop2 = g('scop_2')
-    if scop2:
-        d.t(ML + 1.5, 75.5, scop2, sz=8.5)
-    d.hline(ML + 1, MR - 1, 85.5, lw=0.3)
-    scop3 = g('scop_3')
-    if scop3:
-        d.t(ML + 1.5, 84.5, scop3, sz=8.5)
-
-    # Destinația — 2 linii
-    d.t(ML + 1, 93.5, 'la', sz=6.5)
-    d.hline(ML + 6, MR - 1, 94.5, lw=0.3)
-    dest1 = g('dest_1')
-    if dest1:
-        d.t(ML + 7, 93, dest1, sz=8.5)
-    d.hline(ML + 1, MR - 1, 103.5, lw=0.3)
-    dest2 = g('dest_2')
-    if dest2:
-        d.t(ML + 1.5, 102.5, dest2, sz=8.5)
-
-    # Durata deplasării
-    d.t(ML + 1, 111.5, 'Durata deplasării de la', sz=6.5)
-    d.hline(ML + 46, ML + 78, 112.5, lw=0.3)
-    d.t(ML + 79, 111.5, 'la', sz=6.5)
-    d.hline(ML + 83, MR - 1, 112.5, lw=0.3)
+    # Durata
+    y_dur = CNT_Y + 71
+    d.t(ML + 1, y_dur, 'Durata deplasării de la', sz=6.5)
+    d.hline(ML + 47, ML + 79, y_dur + 1.3, lw=0.3)
+    d.t(ML + 80, y_dur, 'la', sz=6.5)
+    d.hline(ML + 84, MR - 1, y_dur + 1.3, lw=0.3)
     if g('durata_de_la'):
-        d.t(ML + 47, 111, g('durata_de_la'), sz=8.5)
+        d.t(ML + 48, y_dur, g('durata_de_la'), sz=8.5)
     if g('durata_pana_la'):
-        d.t(ML + 84, 111, g('durata_pana_la'), sz=8.5)
+        d.t(ML + 85, y_dur, g('durata_pana_la'), sz=8.5)
 
-    # Legitimație
-    d.t(ML + 1, 120.5, 'Se legitimează cu', sz=6.5)
-    d.hline(ML + 35, MR - 1, 121.5, lw=0.3)
-    if g('legitimatie'):
-        d.t(ML + 36, 120, g('legitimatie'), sz=8.5)
+    rand(79, 'Se legitimează cu', g('legitimatie'), 35)
 
-    # ── 4. ȘTAMPILĂ (y: 126–148) ──
-    d.box(ML, 126, W, 22, lw=0.8)
-    d.t(PW / 2, 136, 'Ștampila unității și semnătura', sz=8, bold=True, align='c')
+    # ── 4. ȘTAMPILĂ (y: 126–146) ─────────────────────────────────────────────
+    SMP_Y = CNT_Y + 80
+    d.box(ML, SMP_Y, W, 20, lw=1.0)
+    d.t(PW / 2, SMP_Y + 9, 'Ștampila unității și semnătura', sz=8, bold=True, align='c')
 
-    # ── 5. DATA (y: 148–157) ──
-    d.t(ML + 1, 154.5, 'Data', sz=6.5)
-    d.hline(ML + 10, MR - 1, 155.5, lw=0.3)
+    # ── 5. DATA (y: 146–155) ─────────────────────────────────────────────────
+    DAT_Y = SMP_Y + 20
+    d.t(ML + 1, DAT_Y + 7, 'Data', sz=6.5)
+    d.hline(ML + 11, MR - 1, DAT_Y + 8, lw=0.3)
     if g('data_emitere'):
-        d.t(ML + 11, 154, g('data_emitere'), sz=8.5)
+        d.t(ML + 12, DAT_Y + 7, g('data_emitere'), sz=8.5)
 
-    # ── 6. CASETE VIZE 2×2 (y: 157–204) ──
-    mid = (ML + MR) / 2  # ~74mm
+    # ── 6. CASETE VIZE 2×2 (y: 155–201) ─────────────────────────────────────
+    VIZ_Y = DAT_Y + 9
+    mid = (ML + MR) / 2
+    cel_w = mid - ML
     cel_h = 23
+
     for row in range(2):
-        y0 = 157 + row * cel_h
         for col in range(2):
             x0 = ML if col == 0 else mid
-            cw = mid - ML
-            d.box(x0, y0, cw, cel_h, lw=0.6)
-            d.t(x0 + 1, y0 + 5.5, 'Sosit*)', sz=6.5)
-            d.hline(x0 + 14, x0 + cw - 1, y0 + 6.5, lw=0.25)
-            d.t(x0 + 1, y0 + 11, 'Plecat*)', sz=6.5)
-            d.hline(x0 + 14, x0 + cw - 1, y0 + 12, lw=0.25)
+            y0 = VIZ_Y + row * cel_h
+            d.box(x0, y0, cel_w, cel_h, lw=0.7)
+            d.t(x0 + 1, y0 + 5.5, 'Sosit*)',         sz=6.5)
+            d.hline(x0 + 14, x0 + cel_w - 1, y0 + 6.5, lw=0.25)
+            d.t(x0 + 1, y0 + 11,  'Plecat*)',        sz=6.5)
+            d.hline(x0 + 14, x0 + cel_w - 1, y0 + 12, lw=0.25)
             d.t(x0 + 1, y0 + 16.5, 'Cu (fără) cazare', sz=6.5)
-            d.hline(x0 + 30, x0 + cw - 1, y0 + 17.5, lw=0.25)
-            d.t(x0 + cw / 2, y0 + 20, 'Ștampila unității și', sz=6, align='c')
-            d.t(x0 + cw / 2, y0 + 22.5, 'Semnătura', sz=6, align='c')
+            d.hline(x0 + 30, x0 + cel_w - 1, y0 + 17.5, lw=0.25)
+            d.t(x0 + cel_w / 2, y0 + 20,   'Ștampila unității și', sz=5.5, align='c')
+            d.t(x0 + cel_w / 2, y0 + 22.5, 'Semnătura',            sz=5.5, align='c')
 
-    # ── 7. NOTĂ DE SUBSOL ──
+    # ── 7. NOTĂ ───────────────────────────────────────────────────────────────
     d.t(ML, 207, '*) Se va completa ziua, luna, anul și ora', sz=5.5)
 
 
-# ── Pagina 2 (Verso — Decont) ────────────────────────────────────────────────
+# ── Pagina 2 (Verso — Decont) ─────────────────────────────────────────────────
 
 def _p2(d: D, data):
     def g(k):
@@ -237,173 +254,169 @@ def _p2(d: D, data):
         return v.strip() if isinstance(v, str) else str(v)
 
     def gf(k):
-        """Valoare numerică pentru sume."""
         try:
             return float((data.get(k) or '0').replace(',', '.'))
         except Exception:
             return 0.0
 
-    # ── 1. HEADER VERSO (y: 3–32) ──
-    d.box(ML, 3, W, 29, lw=0.8)
-    mid = 78
-    d.vline(mid, 3, 32)
+    # ── 1. HEADER VERSO (y: 3–31) ────────────────────────────────────────────
+    d.box(ML, 3, W, 28, lw=1.0)
+    MID = 76
+    d.vline(MID, 3, 31, lw=0.6)
 
     # Stânga
-    d.t(ML + 1, 9, 'Ziua și ora plecării', sz=6.5)
-    d.hline(ML + 38, mid - 1, 10, lw=0.3)
-    d.t(ML + 39, 8.5, g('ziua_ora_plecarii'), sz=8)
+    def sv(eticheta, valoare, y, et_mm):
+        d.t(ML + 1, y, eticheta, sz=6.5)
+        d.hline(ML + et_mm, MID - 1, y + 1.2, lw=0.3)
+        if valoare:
+            d.t(ML + et_mm + 0.5, y, str(valoare), sz=8)
 
-    d.t(ML + 1, 15, 'Ziua și ora sosirii', sz=6.5)
-    d.hline(ML + 37, mid - 1, 16, lw=0.3)
-    d.t(ML + 38, 14.5, g('ziua_ora_sosirii'), sz=8)
-
-    d.t(ML + 1, 21, 'Data depunerii decontului', sz=6.5)
-    d.hline(ML + 49, mid - 1, 22, lw=0.3)
-    d.t(ML + 50, 20.5, g('data_depunere_decont'), sz=8)
-
-    d.t(ML + 1, 27, 'Penalizări calculate', sz=6.5)
-    d.hline(ML + 38, mid - 1, 28, lw=0.3)
-    d.t(ML + 39, 26.5, g('penalizari'), sz=8)
+    sv('Ziua și ora plecării',        g('ziua_ora_plecarii'),   8.5,  38)
+    sv('Ziua și ora sosirii',         g('ziua_ora_sosirii'),    15.5, 37)
+    sv('Data depunerii decontului',   g('data_depunere_decont'),22.5, 50)
+    sv('Penalizări calculate',        g('penalizari'),          29.5, 38)
 
     # Dreapta — Avans
-    d.t((mid + MR) / 2, 7.5, 'Avans spre decontare', sz=7, bold=True, align='c')
-    d.t(mid + 2, 13, '- Primit la plecare', sz=6.5)
-    d.hline(mid + 37, MR - 8, 14, lw=0.3)
-    d.t(MR - 7, 13, 'lei', sz=6.5)
-    if gf('avans_plecare'):
-        d.t(mid + 38, 12.5, f'{gf("avans_plecare"):.2f}', sz=8, align='r')
-        # right-align before "lei"
+    d.fill_rect(MID, 3, W - (MID - ML), 6.5, gray=0.90)
+    d.t((MID + MR) / 2, 7.5, 'Avans spre decontare', sz=7, bold=True, align='c')
 
-    d.t(mid + 2, 19, '- Primit în timpul deplasării', sz=6.5)
-    d.hline(mid + 54, MR - 8, 20, lw=0.3)
-    d.t(MR - 7, 19, 'lei', sz=6.5)
-    if gf('avans_deplasare'):
-        d.t(MR - 9, 18.5, f'{gf("avans_deplasare"):.2f}', sz=8, align='r')
+    def av(eticheta, valoare, y):
+        d.t(MID + 2, y, eticheta, sz=6.5)
+        d.hline(MID + 2, MR - 9, y + 1.2, lw=0.3)
+        d.t(MR - 8, y, 'lei', sz=6.5)
+        if valoare:
+            d.t(MR - 9, y, f'{valoare:.2f}', sz=8, align='r')
 
-    avans_total = gf('avans_plecare') + gf('avans_deplasare')
-    d.t(mid + 2, 25, 'TOTAL', sz=7, bold=True)
-    d.hline(mid + 14, MR - 8, 26, lw=0.3)
-    d.t(MR - 7, 25, 'lei', sz=6.5)
-    if avans_total:
-        d.t(MR - 9, 24.5, f'{avans_total:.2f}', sz=8, bold=True, align='r')
+    av('- Primit la plecare',         gf('avans_plecare'),   13)
+    av('- Primit în timpul deplasării', gf('avans_deplasare'), 20)
+    total_av = gf('avans_plecare') + gf('avans_deplasare')
+    # linie înainte de total
+    d.hline(MID + 2, MR - 1, 25.5, lw=0.5)
+    d.t(MID + 2, 27, 'TOTAL', sz=7, bold=True)
+    d.hline(MID + 2, MR - 9, 28, lw=0.3)
+    d.t(MR - 8, 27, 'lei', sz=6.5)
+    if total_av:
+        d.t(MR - 9, 27, f'{total_av:.2f}', sz=8, bold=True, align='r')
 
-    # ── 2. TITLU TABEL CHELTUIELI (y: 32–38) ──
-    d.box(ML, 32, W, 6, lw=0.8)
+    # ── 2. TITLU TABEL (y: 31–38) ────────────────────────────────────────────
+    d.fill_rect(ML, 31, W, 7, gray=0.88)
+    d.box(ML, 31, W, 7, lw=1.0)
     d.t(PW / 2, 36.5,
         'CHELTUIELI EFECTUATE CONFORM DOCUMENTELOR ANEXATE',
         sz=6.5, bold=True, align='c')
 
-    # ── 3. HEADER TABEL (y: 38–44) ──
-    col1_w = 70   # Felul actului + emitentul
-    col2_w = 38   # Nr. și data
-    col3_w = 30   # Suma
-    c1x = ML
-    c2x = ML + col1_w
-    c3x = ML + col1_w + col2_w
+    # ── 3. HEADER TABEL (y: 38–45) ───────────────────────────────────────────
+    C1W, C2W, C3W = 68, 40, 30   # lățimi coloane mm
+    C1X = ML
+    C2X = ML + C1W
+    C3X = ML + C1W + C2W
 
-    d.box(ML, 38, W, 6, lw=0.8)
-    d.vline(c2x, 38, 44)
-    d.vline(c3x, 38, 44)
-    d.t(c1x + col1_w / 2, 42.5, 'Felul actului și emitentul', sz=6.5, align='c')
-    d.t(c2x + col2_w / 2, 42.5, 'Nr. și data actului', sz=6.5, align='c')
-    d.t(c3x + col3_w / 2, 42.5, 'Suma', sz=6.5, align='c')
+    d.fill_rect(ML, 38, W, 7, gray=0.93)
+    d.box(ML, 38, W, 7, lw=1.0)
+    d.vline(C2X, 38, 45, lw=0.6)
+    d.vline(C3X, 38, 45, lw=0.6)
+    d.t(C1X + C1W / 2, 43, 'Felul actului și emitentul', sz=6.5, bold=True, align='c')
+    d.t(C2X + C2W / 2, 43, 'Nr. și data actului',        sz=6.5, bold=True, align='c')
+    d.t(C3X + C3W / 2, 43, 'Suma',                       sz=6.5, bold=True, align='c')
 
-    # ── 4. RÂNDURI CHELTUIELI (y: 44–...) ──
-    rand_h = 7
-    nr_randuri = 12
-    y_tabel_start = 44
+    # ── 4. RÂNDURI (y: 45–...) ────────────────────────────────────────────────
+    RH = 7          # înălțime rând mm
+    NR = 12         # număr rânduri
+    Y0 = 45
     total_ch = 0.0
 
-    for i in range(nr_randuri):
-        yr = y_tabel_start + i * rand_h
-        d.hline(ML, MR, yr + rand_h, lw=0.3)
-        d.vline(c2x, yr, yr + rand_h, lw=0.3)
-        d.vline(c3x, yr, yr + rand_h, lw=0.3)
-        d.vline(ML, yr, yr + rand_h, lw=0.3)
-        d.vline(MR, yr, yr + rand_h, lw=0.3)
+    for i in range(NR):
+        yr = Y0 + i * RH
+        # alternăm fundalul ușor
+        if i % 2 == 0:
+            d.fill_rect(ML, yr, W, RH, gray=0.97)
 
-        fel = g(f'ch_fel_{i}')
-        emitent = g(f'ch_emitent_{i}')
+        d.hline(ML, MR, yr + RH, lw=0.25)
+        d.vline(ML, yr, yr + RH, lw=0.5)
+        d.vline(C2X, yr, yr + RH, lw=0.4)
+        d.vline(C3X, yr, yr + RH, lw=0.4)
+        d.vline(MR, yr, yr + RH, lw=0.5)
+
+        fel    = g(f'ch_fel_{i}')
         nr_act = g(f'ch_nr_{i}')
-        data_act = g(f'ch_data_{i}')
-        suma = gf(f'ch_suma_{i}')
+        suma   = gf(f'ch_suma_{i}')
 
         if fel:
-            d.t(c1x + 0.5, yr + 4.5, fel, sz=6.5)
-        if emitent:
-            d.t(c1x + 0.5, yr + 4.5 + (3 if fel else 0), emitent, sz=6)
-        nr_data = ' / '.join(filter(None, [nr_act, data_act]))
-        if nr_data:
-            d.t(c2x + 0.5, yr + 4.5, nr_data, sz=6.5)
+            # Trunchiem dacă e prea lung
+            while fel and stringWidth(fel, _f(False), 6.5) > (C1W - 2) * mm:
+                fel = fel[:-1]
+            d.t(C1X + 0.5, yr + 4.5, fel, sz=6.5)
+
+        if nr_act:
+            d.t(C2X + 0.5, yr + 4.5, nr_act, sz=6.5)
+
         if suma:
-            d.t(c3x + col3_w - 0.5, yr + 4.5, f'{suma:.2f}', sz=7, align='r')
+            d.t(C3X + C3W - 0.5, yr + 4.5, f'{suma:.2f}', sz=7, align='r')
             total_ch += suma
 
-    # ── 5. TOTAL CHELTUIELI ──
-    y_total = y_tabel_start + nr_randuri * rand_h
-    d.box(ML, y_total, W, 7, lw=0.8)
-    d.vline(c2x, y_total, y_total + 7)
-    d.vline(c3x, y_total, y_total + 7)
-    d.t(PW / 2, y_total + 5, 'TOTAL CHELTUIELI', sz=7.5, bold=True, align='c')
+    # ── 5. TOTAL (y: ...) ─────────────────────────────────────────────────────
+    Y_TOT = Y0 + NR * RH
+    d.fill_rect(ML, Y_TOT, W, 7, gray=0.88)
+    d.box(ML, Y_TOT, W, 7, lw=1.0)
+    d.vline(C2X, Y_TOT, Y_TOT + 7, lw=0.5)
+    d.vline(C3X, Y_TOT, Y_TOT + 7, lw=0.5)
+    d.t((ML + C3X) / 2, Y_TOT + 5, 'TOTAL CHELTUIELI', sz=8, bold=True, align='c')
     if total_ch:
-        d.t(c3x + col3_w - 0.5, y_total + 5, f'{total_ch:.2f}', sz=8, bold=True, align='r')
+        d.t(C3X + C3W - 0.5, Y_TOT + 5, f'{total_ch:.2f}', sz=8, bold=True, align='r')
 
-    # ── 6. DIFERENȚE (y: ...) ──
-    y_dif = y_total + 7
-    d.box(ML, y_dif, W, 14, lw=0.8)
-    d.vline(mid, y_dif, y_dif + 14)
+    # ── 6. DIFERENȚE ──────────────────────────────────────────────────────────
+    Y_DIF = Y_TOT + 7
+    d.box(ML, Y_DIF, W, 13, lw=1.0)
+    d.vline(MID, Y_DIF, Y_DIF + 13, lw=0.5)
 
-    d.t(ML + 1, y_dif + 5, 'Diferența de restituit s-a depus cu', sz=6)
-    d.t(ML + 1, y_dif + 9, 'dispoziție de încasare către casierie', sz=6)
-    d.t(ML + 1, y_dif + 13, 'Nr.', sz=6)
-    d.hline(ML + 9, ML + 30, y_dif + 13.5, lw=0.3)
-    d.t(ML + 31, y_dif + 13, 'din', sz=6)
-    d.hline(ML + 37, mid - 1, y_dif + 13.5, lw=0.3)
+    d.t(ML + 1, Y_DIF + 4.5,  'Diferența de restituit s-a depus cu', sz=6)
+    d.t(ML + 1, Y_DIF + 8.5,  'dispoziție de încasare către casierie', sz=6)
+    d.t(ML + 1, Y_DIF + 12.5, 'Nr.', sz=6)
+    d.hline(ML + 9, ML + 28, Y_DIF + 13, lw=0.3)
+    d.t(ML + 29, Y_DIF + 12.5, 'din', sz=6)
+    d.hline(ML + 35, MID - 1, Y_DIF + 13, lw=0.3)
 
     tip = g('diferenta_tip') or 'primit'
     val_dif = gf('diferenta_val')
-    d.t(mid + 2, y_dif + 6, f'Diferența de', sz=6.5)
-    d.t(mid + 2, y_dif + 10, tip, sz=7, bold=True)
-    d.hline(mid + 2, MR - 8, y_dif + 13.5, lw=0.3)
-    d.t(MR - 7, y_dif + 13, 'lei', sz=6.5)
+    d.t(MID + 2, Y_DIF + 5,  'Diferența de', sz=6.5)
+    d.t(MID + 2, Y_DIF + 10, tip,            sz=7, bold=True)
+    d.hline(MID + 2, MR - 9, Y_DIF + 13, lw=0.3)
+    d.t(MR - 8, Y_DIF + 12.5, 'lei', sz=6.5)
     if val_dif:
-        d.t(MR - 9, y_dif + 12.5, f'{val_dif:.2f}', sz=8, align='r')
+        d.t(MR - 9, Y_DIF + 12, f'{val_dif:.2f}', sz=8, align='r')
 
-    # ── 7. SEMNĂTURI (y: ...) ──
-    y_semn = y_dif + 14
-    semn_labels = [
+    # ── 7. SEMNĂTURI ──────────────────────────────────────────────────────────
+    Y_SGN = Y_DIF + 13
+    SGN_H = 16
+    semn = [
         'Aprobat\nconductorul\nunității',
         'Control financiar\npreventiv',
         'Verificat\ndecont',
         'Șef\ncompartiment',
         'Titular\navans',
     ]
-    semn_h = 17
-    cel_w = W / len(semn_labels)
+    cel_w = W / len(semn)
 
-    d.box(ML, y_semn, W, semn_h, lw=0.8)
-    for i, label in enumerate(semn_labels):
+    d.box(ML, Y_SGN, W, SGN_H, lw=1.0)
+    for i, label in enumerate(semn):
         xc = ML + i * cel_w
         if i > 0:
-            d.vline(xc, y_semn, y_semn + semn_h)
+            d.vline(xc, Y_SGN, Y_SGN + SGN_H, lw=0.5)
         cx = xc + cel_w / 2
         for j, linie in enumerate(label.split('\n')):
-            d.t(cx, y_semn + 4 + j * 4, linie, sz=5.5, align='c')
+            d.t(cx, Y_SGN + 4 + j * 3.8, linie, sz=5.5, align='c')
 
 
-# ── Entry point ──────────────────────────────────────────────────────────────
+# ── Entry point ───────────────────────────────────────────────────────────────
 
 def generate_pdf(data) -> bytes:
-    """Generează PDF A5 cu 2 pagini și returnează bytes."""
+    """Generează PDF A5, 2 pagini (față + verso)."""
     buf = BytesIO()
     c = Canvas(buf, pagesize=A5)
 
-    d = D(c)
-    _p1(d, data)
+    _p1(D(c), data)
     c.showPage()
-
-    d2 = D(c)
-    _p2(d2, data)
+    _p2(D(c), data)
     c.showPage()
 
     c.save()

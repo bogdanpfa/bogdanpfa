@@ -17,7 +17,12 @@
         <div class="row g-3">
           <div class="col-8">
             <label class="form-label fw-semibold">Unitatea</label>
-            <input type="text" class="form-control" name="unitatea" value="{{ unitatea }}" required>
+            <input type="text" class="form-control" name="unitatea" id="f-unitatea" value="{{ unitatea }}" required>
+          </div>
+          <div class="col-12">
+            <label class="form-label fw-semibold">Subdiviziunea <span class="text-muted fw-normal small">opțional</span></label>
+            <input type="text" class="form-control" name="subdiviziunea" id="f-subdiviziunea"
+                   placeholder="ex. SERVICIUL ORGANIZARE, TEHNIC, DEZVOLTARE ȘI IT">
           </div>
           <div class="col-4">
             <label class="form-label fw-semibold">Nr. ordin</label>
@@ -246,7 +251,11 @@ function renderAC(items) {
 function selectPersoana(p) {
   document.getElementById('f-nume').value = p.display;
   document.getElementById('f-functie').value = p.functie;
-  document.querySelector('[name=unitatea]').value = p.loc_munca || document.querySelector('[name=unitatea]').value;
+  if (p.loc_munca) {
+    const parts = p.loc_munca.split('/');
+    document.getElementById('f-unitatea').value = parts[0].trim();
+    document.getElementById('f-subdiviziunea').value = parts.slice(1).join('/').trim();
+  }
   searchInput.value = '';
   acList.classList.add('d-none');
 }
