@@ -1,5 +1,7 @@
 import os
 import io
+import threading
+import webbrowser
 from flask import Flask, render_template, request, jsonify, send_file
 from dotenv import load_dotenv
 
@@ -55,4 +57,6 @@ def genereaza():
 
 
 if __name__ == '__main__':
+    url = f'http://localhost:{PORT}'
+    threading.Timer(1.2, lambda: webbrowser.open(url)).start()
     app.run(host='0.0.0.0', port=PORT, debug=False)
