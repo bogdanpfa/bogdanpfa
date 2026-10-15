@@ -1,0 +1,315 @@
+{% extends "base.html" %}
+{% block title %}Ordin de Deplasare — Formular{% endblock %}
+
+{% block content %}
+<form method="POST" action="/genereaza" id="form-ordin">
+<div class="row g-4">
+
+  <!-- ═══ COLOANA STÂNGĂ ══════════════════════════════════════════════════ -->
+  <div class="col-lg-7">
+
+    <!-- CARD: Date generale -->
+    <div class="card shadow-sm mb-4">
+      <div class="card-header py-2">
+        <i class="bi bi-building me-2"></i>Date generale
+      </div>
+      <div class="card-body">
+        <div class="row g-3">
+          <div class="col-8">
+            <label class="form-label fw-semibold">Unitatea</label>
+            <input type="text" class="form-control" name="unitatea" value="{{ unitatea }}" required>
+          </div>
+          <div class="col-4">
+            <label class="form-label fw-semibold">Nr. ordin</label>
+            <input type="text" class="form-control" name="nr_ordin" placeholder="ex. 42" required>
+          </div>
+          <div class="col-6">
+            <label class="form-label fw-semibold">Data emiterii</label>
+            <input type="date" class="form-control" name="data_emitere" required>
+          </div>
+          <div class="col-6">
+            <label class="form-label fw-semibold">Depus decont (nr/data) <span class="text-muted fw-normal small">opțional</span></label>
+            <input type="text" class="form-control" name="depus_decont" placeholder="ex. 15 / 20.10.2026">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CARD: Delegat -->
+    <div class="card shadow-sm mb-4">
+      <div class="card-header py-2">
+        <i class="bi bi-person-badge me-2"></i>Delegat
+      </div>
+      <div class="card-body">
+        <div class="row g-3">
+          <!-- Căutare persoană -->
+          <div class="col-12 position-relative">
+            <label class="form-label fw-semibold">Caută în baza de date</label>
+            <div class="input-group">
+              <span class="input-group-text"><i class="bi bi-search"></i></span>
+              <input type="text" class="form-control" id="search-persoana"
+                     placeholder="Tastează numele (min. 2 litere)..." autocomplete="off">
+            </div>
+            <div class="autocomplete-results d-none" id="autocomplete-list"></div>
+          </div>
+
+          <!-- Titlu + Nume -->
+          <div class="col-3">
+            <label class="form-label fw-semibold">Titlu</label>
+            <select class="form-select" name="titlu">
+              <option value="Dl.">Dl.</option>
+              <option value="D-na">D-na</option>
+            </select>
+          </div>
+          <div class="col-9">
+            <label class="form-label fw-semibold">Nume și prenume</label>
+            <input type="text" class="form-control" name="nume_prenume" id="f-nume" required
+                   placeholder="POPESCU Ion">
+          </div>
+          <div class="col-12">
+            <label class="form-label fw-semibold">Funcția</label>
+            <input type="text" class="form-control" name="functia" id="f-functie" required
+                   placeholder="Inspector de mișcare">
+          </div>
+          <div class="col-12">
+            <label class="form-label fw-semibold">Se legitimează cu</label>
+            <input type="text" class="form-control" name="legitimatie"
+                   placeholder="CI seria IS nr. 000000">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CARD: Deplasare -->
+    <div class="card shadow-sm mb-4">
+      <div class="card-header py-2">
+        <i class="bi bi-geo-alt me-2"></i>Deplasare
+      </div>
+      <div class="card-body">
+        <div class="row g-3">
+          <div class="col-12">
+            <label class="form-label fw-semibold">Scopul deplasării <span class="text-muted fw-normal small">(max. 3 rânduri)</span></label>
+            <input type="text" class="form-control mb-2" name="scop_1"
+                   placeholder="Rândul 1 — ex. Participare la ședința de lucru privind...">
+            <input type="text" class="form-control mb-2" name="scop_2" placeholder="Rândul 2 (opțional)">
+            <input type="text" class="form-control" name="scop_3" placeholder="Rândul 3 (opțional)">
+          </div>
+          <div class="col-12">
+            <label class="form-label fw-semibold">Destinația <span class="text-muted fw-normal small">(max. 2 rânduri)</span></label>
+            <input type="text" class="form-control mb-2" name="dest_1"
+                   placeholder="Rândul 1 — ex. Direcția Regională CFR Calatori București">
+            <input type="text" class="form-control" name="dest_2" placeholder="Rândul 2 (opțional)">
+          </div>
+          <div class="col-6">
+            <label class="form-label fw-semibold">Durata de la</label>
+            <input type="date" class="form-control" name="durata_de_la" required>
+          </div>
+          <div class="col-6">
+            <label class="form-label fw-semibold">până la</label>
+            <input type="date" class="form-control" name="durata_pana_la" required>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /col-lg-7 -->
+
+  <!-- ═══ COLOANA DREAPTĂ — DECONT ════════════════════════════════════════ -->
+  <div class="col-lg-5">
+    <div class="card shadow-sm mb-4">
+      <div class="card-header py-2">
+        <i class="bi bi-receipt me-2"></i>Decont (Verso)
+        <span class="badge bg-secondary ms-2 fw-normal">opțional</span>
+      </div>
+      <div class="card-body">
+
+        <p class="section-title">Deplasare — ore</p>
+        <div class="row g-2 mb-3">
+          <div class="col-6">
+            <label class="form-label small">Ziua și ora plecării</label>
+            <input type="text" class="form-control form-control-sm" name="ziua_ora_plecarii"
+                   placeholder="15.10.2026 08:00">
+          </div>
+          <div class="col-6">
+            <label class="form-label small">Ziua și ora sosirii</label>
+            <input type="text" class="form-control form-control-sm" name="ziua_ora_sosirii"
+                   placeholder="16.10.2026 18:00">
+          </div>
+          <div class="col-6">
+            <label class="form-label small">Data depunerii decontului</label>
+            <input type="date" class="form-control form-control-sm" name="data_depunere_decont">
+          </div>
+          <div class="col-6">
+            <label class="form-label small">Penalizări calculate (lei)</label>
+            <input type="text" class="form-control form-control-sm" name="penalizari" placeholder="0.00">
+          </div>
+        </div>
+
+        <p class="section-title">Avans spre decontare</p>
+        <div class="row g-2 mb-3">
+          <div class="col-6">
+            <label class="form-label small">Primit la plecare (lei)</label>
+            <input type="number" step="0.01" class="form-control form-control-sm avans-input"
+                   name="avans_plecare" placeholder="0.00" value="">
+          </div>
+          <div class="col-6">
+            <label class="form-label small">Primit în deplasare (lei)</label>
+            <input type="number" step="0.01" class="form-control form-control-sm avans-input"
+                   name="avans_deplasare" placeholder="0.00" value="">
+          </div>
+          <div class="col-12">
+            <div class="alert alert-secondary py-1 mb-0 small">
+              Total avans: <strong id="total-avans">0.00 lei</strong>
+            </div>
+          </div>
+        </div>
+
+        <p class="section-title">Cheltuieli efectuate</p>
+        <div id="tabel-cheltuieli">
+          <!-- rânduri generate dinamic -->
+        </div>
+        <div class="d-flex justify-content-between align-items-center mt-2 mb-3">
+          <button type="button" class="btn btn-sm btn-outline-primary" id="btn-add-rand">
+            <i class="bi bi-plus-circle me-1"></i>Adaugă rând
+          </button>
+          <span class="small">Total: <span id="total-display">0.00 lei</span></span>
+        </div>
+
+        <p class="section-title">Diferență</p>
+        <div class="row g-2">
+          <div class="col-5">
+            <label class="form-label small">Tip diferență</label>
+            <select class="form-select form-select-sm" name="diferenta_tip">
+              <option value="primit">de primit</option>
+              <option value="restituit">de restituit</option>
+            </select>
+          </div>
+          <div class="col-7">
+            <label class="form-label small">Valoare (lei)</label>
+            <input type="number" step="0.01" class="form-control form-control-sm"
+                   name="diferenta_val" placeholder="0.00">
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Buton generare -->
+    <div class="d-grid gap-2">
+      <button type="submit" class="btn btn-primary btn-lg">
+        <i class="bi bi-file-earmark-pdf me-2"></i>Generează PDF
+      </button>
+    </div>
+  </div><!-- /col-lg-5 -->
+
+</div><!-- /row -->
+</form>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// ── Autocomplete persoană ────────────────────────────────────────────────────
+const searchInput = document.getElementById('search-persoana');
+const acList = document.getElementById('autocomplete-list');
+let acTimer = null;
+
+searchInput.addEventListener('input', () => {
+  clearTimeout(acTimer);
+  const q = searchInput.value.trim();
+  if (q.length < 2) { acList.classList.add('d-none'); return; }
+  acTimer = setTimeout(() => fetchPersoane(q), 280);
+});
+
+async function fetchPersoane(q) {
+  try {
+    const r = await fetch('/api/persoane?q=' + encodeURIComponent(q));
+    const data = await r.json();
+    if (data.eroare) { console.warn(data.eroare); acList.classList.add('d-none'); return; }
+    renderAC(data);
+  } catch(e) { acList.classList.add('d-none'); }
+}
+
+function renderAC(items) {
+  acList.innerHTML = '';
+  if (!items.length) { acList.classList.add('d-none'); return; }
+  items.forEach(p => {
+    const div = document.createElement('div');
+    div.className = 'item';
+    div.innerHTML = `<div class="fw-semibold">${p.display}</div>
+      <div class="marca">${p.marca} &nbsp;·&nbsp; ${p.functie}</div>`;
+    div.addEventListener('click', () => selectPersoana(p));
+    acList.appendChild(div);
+  });
+  acList.classList.remove('d-none');
+}
+
+function selectPersoana(p) {
+  document.getElementById('f-nume').value = p.display;
+  document.getElementById('f-functie').value = p.functie;
+  document.querySelector('[name=unitatea]').value = p.loc_munca || document.querySelector('[name=unitatea]').value;
+  searchInput.value = '';
+  acList.classList.add('d-none');
+}
+
+document.addEventListener('click', e => {
+  if (!e.target.closest('#search-persoana') && !e.target.closest('#autocomplete-list')) {
+    acList.classList.add('d-none');
+  }
+});
+
+// ── Tabel cheltuieli ─────────────────────────────────────────────────────────
+let randIdx = 0;
+
+function addRand() {
+  const i = randIdx++;
+  const div = document.createElement('div');
+  div.className = 'row g-1 mb-1 row-cheltuiala align-items-center';
+  div.innerHTML = `
+    <div class="col-5">
+      <input type="text" class="form-control form-control-sm" name="ch_fel_${i}"
+             placeholder="Felul actului / emitent">
+    </div>
+    <div class="col-3">
+      <input type="text" class="form-control form-control-sm" name="ch_nr_${i}"
+             placeholder="Nr. / data">
+    </div>
+    <div class="col-3">
+      <input type="number" step="0.01" class="form-control form-control-sm suma-input"
+             name="ch_suma_${i}" placeholder="0.00" oninput="recalcTotal()">
+    </div>
+    <div class="col-1 text-center">
+      <button type="button" class="btn btn-sm btn-link text-danger p-0"
+              onclick="this.closest('.row-cheltuiala').remove(); recalcTotal();">
+        <i class="bi bi-x-circle"></i>
+      </button>
+    </div>`;
+  document.getElementById('tabel-cheltuieli').appendChild(div);
+}
+
+document.getElementById('btn-add-rand').addEventListener('click', addRand);
+
+function recalcTotal() {
+  let t = 0;
+  document.querySelectorAll('.suma-input').forEach(inp => {
+    t += parseFloat(inp.value || 0);
+  });
+  document.getElementById('total-display').textContent = t.toFixed(2) + ' lei';
+}
+
+// ── Total avans ──────────────────────────────────────────────────────────────
+document.querySelectorAll('.avans-input').forEach(inp => {
+  inp.addEventListener('input', () => {
+    let t = 0;
+    document.querySelectorAll('.avans-input').forEach(a => t += parseFloat(a.value || 0));
+    document.getElementById('total-avans').textContent = t.toFixed(2) + ' lei';
+  });
+});
+
+// ── Inițializare: 3 rânduri goale ─────────────────────────────────────────────
+addRand(); addRand(); addRand();
+
+// ── Data azi implicit ────────────────────────────────────────────────────────
+const azi = new Date().toISOString().slice(0, 10);
+document.querySelector('[name=data_emitere]').value = azi;
+</script>
+{% endblock %}
