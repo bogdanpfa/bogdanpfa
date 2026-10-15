@@ -57,6 +57,11 @@ def genereaza():
 
 
 if __name__ == '__main__':
-    url = f'http://localhost:{PORT}'
-    threading.Timer(1.2, lambda: webbrowser.open(url)).start()
-    app.run(host='0.0.0.0', port=PORT, debug=False)
+    production = os.environ.get('PRODUCTION_MODE', '').lower() == 'true'
+    if not production:
+        url = f'http://localhost:{PORT}'
+        threading.Timer(1.2, lambda: webbrowser.open(url)).start()
+        app.run(host='0.0.0.0', port=PORT, debug=False)
+    else:
+        from waitress import serve
+        serve(app, host='0.0.0.0', port=PORT, threads=4)
