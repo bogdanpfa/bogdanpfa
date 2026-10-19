@@ -806,13 +806,70 @@ footer a:hover { color: var(--accent); }
 }
 .theme-btn:hover { border-color: var(--accent); color: var(--accent); }
 
+/* ── HAMBURGER ──────────────────────────────────────────────── */
+.hamburger {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  width: 36px; height: 36px;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: 1px solid var(--glass-b);
+  border-radius: 6px;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: border-color .2s;
+}
+.hamburger:hover { border-color: var(--accent); }
+.hamburger span {
+  display: block;
+  width: 18px; height: 2px;
+  background: var(--fg-mid);
+  border-radius: 2px;
+  transition: transform .3s, opacity .3s, background .2s;
+}
+.hamburger:hover span { background: var(--accent); }
+.hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.hamburger.open span:nth-child(2) { opacity: 0; }
+.hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+.mobile-menu {
+  display: none;
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  z-index: 190;
+  background: rgba(6, 9, 15, .97);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2.25rem;
+  padding-top: 5rem;
+}
+.mobile-menu.open { display: flex; }
+.mobile-menu a {
+  color: var(--fg);
+  text-decoration: none;
+  font-family: var(--f-head);
+  font-size: 1.6rem;
+  font-weight: 700;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  transition: color .2s;
+}
+.mobile-menu a:hover { color: var(--accent); }
+
 @media (max-width: 600px) {
   .nav-links { display: none; }
+  .hamburger { display: flex; }
   #nav { padding: .9rem max(1rem, env(safe-area-inset-right, 0px))
                    .9rem max(1rem, env(safe-area-inset-left, 0px)); }
   .hero { min-height: auto; padding-block: 5rem 4rem; padding-left: max(1.25rem, env(safe-area-inset-left, 0px)); padding-right: max(1.25rem, env(safe-area-inset-right, 0px)); }
   section { padding-block: 4rem; }
   .video-meta { flex-direction: column; align-items: flex-start; }
+  .wa-float { bottom: 1.25rem; right: 1.25rem; width: 52px; height: 52px; }
 }
 
 /* ── LIGHTBOX ───────────────────────────────────────────────── */
@@ -1067,6 +1124,9 @@ footer a:hover { color: var(--accent); }
     <li><a href="#video">Video</a></li>
     <li><a href="#contact">Contact</a></li>
   </ul>
+  <button class="hamburger" id="hamburger" aria-label="Meniu" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
   <button id="theme-toggle" class="theme-btn" aria-label="Schimbă tema">
     <svg id="icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
     <svg id="icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
@@ -1335,6 +1395,16 @@ footer a:hover { color: var(--accent); }
 
 <!-- ════════════════════════════════ FOOTER ═════════════════ -->
 
+
+<!-- ════════════════════════════════ MOBILE MENU ══════════ -->
+<nav class="mobile-menu" id="mobile-menu" aria-label="Navigare mobilă">
+  <a href="#nano"           class="mm-link">Nano-tehnologia</a>
+  <a href="#lotus"          class="mm-link">Efectul Lotus</a>
+  <a href="#cum-functioneaza" class="mm-link">Cum funcționează</a>
+  <a href="#produse"        class="mm-link">Produse</a>
+  <a href="#video"          class="mm-link">Video</a>
+  <a href="#contact"        class="mm-link">Contact</a>
+</nav>
 
 <!-- ════════════════════════════════ FLOATING WA ═══════════ -->
 <a href="https://wa.me/40768197425" target="_blank" rel="noopener" class="wa-float" aria-label="Contactează-ne pe WhatsApp">
@@ -1608,6 +1678,26 @@ footer a:hover { color: var(--accent); }
   document.addEventListener('touchmove', function(e) {
     if (dragging) setPos(e.touches[0].clientX);
   }, { passive: true });
+})();
+
+/* ── Hamburger menu ── */
+(function () {
+  const btn  = document.getElementById('hamburger');
+  const menu = document.getElementById('mobile-menu');
+  if (!btn || !menu) return;
+  function toggle(open) {
+    btn.classList.toggle('open', open);
+    menu.classList.toggle('open', open);
+    btn.setAttribute('aria-expanded', open);
+    document.body.style.overflow = open ? 'hidden' : '';
+  }
+  btn.addEventListener('click', function() { toggle(!btn.classList.contains('open')); });
+  menu.querySelectorAll('.mm-link').forEach(function(a) {
+    a.addEventListener('click', function() { toggle(false); });
+  });
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') toggle(false);
+  });
 })();
 
 /* ── Cookie consent ── */
