@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>STIZO NPC Iași – Izolații, hidroizolații și construcții</title>
+  <meta name="description" content="STIZO NPC Iași: izolații termice industriale, hidroizolații și construcții la cheie. Know-how din 1951, peste 100 de specialiști, certificări ISO.">
+  <meta name="theme-color" content="#111827">
+  <link rel="canonical" href="https://www.stizo-npc.ro/">
+
+  <!-- CSP de bază: doar resurse proprii + fonturi Google + serviciul de formular -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; script-src 'self'; connect-src https://api.web3forms.com; form-action https://api.web3forms.com; base-uri 'self'">
+
+  <!-- Open Graph / Twitter -->
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="ro_RO">
+  <meta property="og:site_name" content="STIZO NPC">
+  <meta property="og:title" content="STIZO NPC – Structuri și izolații de înaltă exigență, Iași">
+  <meta property="og:description" content="Izolații termice industriale, hidroizolații și construcții la cheie. Know-how internațional, prezență solidă în Iași din 2010.">
+  <meta property="og:url" content="https://www.stizo-npc.ro/">
+  <meta property="og:image" content="https://www.stizo-npc.ro/img/hero-izolatii-conducte.webp">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <!-- Fonturi: preconnect ca să nu întârzie randarea textului -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+
+  <!-- Imaginea hero e LCP-ul paginii: o cerem devreme -->
+  <link rel="preload" as="image" href="img/hero-izolatii-conducte.webp" fetchpriority="high">
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/main.js" defer></script>
+
+  <!-- Date structurate pentru Google (firmă locală) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "GeneralContractor",
+    "name": "STIZO NPC S.R.L.",
+    "slogan": "Partenerul tău în structuri și izolații",
+    "url": "https://www.stizo-npc.ro/",
+    "image": "https://www.stizo-npc.ro/img/hero-izolatii-conducte.webp",
+    "telephone": "+40232230330",
+    "email": "office@stizo-npc.ro",
+    "foundingDate": "2010",
+    "numberOfEmployees": { "@type": "QuantitativeValue", "minValue": 100 },
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "Str. Manta Roșie nr. 17",
+      "addressLocality": "Iași",
+      "addressRegion": "Iași",
+      "addressCountry": "RO"
+    },
+    "areaServed": "RO",
+    "knowsAbout": ["Izolații termice industriale", "Hidroizolații", "Izolații fonice", "Protecție contra incendiilor", "Protecție anticorozivă", "Construcții civile și industriale"]
+  }
+  </script>
+</head>
+<body>
+  <a href="#main-content" class="skip-link">Sari la conținutul principal</a>
+
+  <!-- Sprite SVG: iconițele se definesc o singură dată și se refolosesc cu <use> -->
+  <svg width="0" height="0" class="sr-only" aria-hidden="true">
+    <defs>
+      <symbol id="i-flame" viewBox="0 0 24 24"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.07-2.14-.22-4.05 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.15.43-2.29 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></symbol>
+      <symbol id="i-drop" viewBox="0 0 24 24"><path d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5C6 11.1 5 13 5 15a7 7 0 0 0 7 7z"/></symbol>
+      <symbol id="i-building" viewBox="0 0 24 24"><path d="M6 22V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18Z"/><path d="M6 12H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2M18 9h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-2M10 6h4M10 10h4M10 14h4M10 18h4"/></symbol>
+      <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/><path d="m9 12 2 2 4-4"/></symbol>
+      <symbol id="i-leaf" viewBox="0 0 24 24"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></symbol>
+      <symbol id="i-hat" viewBox="0 0 24 24"><path d="M2 18a1 1 0 0 0 1 1h18a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v2zM10 10V5a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v5M4 15v-3a6 6 0 0 1 6-6M14 6a6 6 0 0 1 6 6v3"/></symbol>
+      <symbol id="i-phone" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></symbol>
+      <symbol id="i-mail" viewBox="0 0 24 24"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></symbol>
+      <symbol id="i-pin" viewBox="0 0 24 24"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></symbol>
+      <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></symbol>
+      <symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></symbol>
+      <symbol id="i-left" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></symbol>
+      <symbol id="i-right" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></symbol>
+      <symbol id="i-images" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="3" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.09-3.09a2 2 0 0 0-2.82 0L6 21"/></symbol>
+      <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+    </defs>
+  </svg>
+
+  <!-- ============ NAVBAR ============ -->
+  <header class="site-header" id="site-header">
+    <div class="container nav">
+      <a href="#top" class="logo" aria-label="STIZO NPC – început de pagină">
+        <span class="logo-mark" aria-hidden="true"><span></span><span></span><span></span></span>
+        <span class="logo-text">
+          <span class="logo-name">STIZO<b>NPC</b></span>
+          <span class="logo-tag">Structuri &amp; Izolații | Iași</span>
+        </span>
+      </a>
+
+      <nav class="nav-menu" id="nav-menu" aria-label="Navigare principală">
+        <ul>
+          <li><a href="#servicii">Servicii</a></li>
+          <li><a href="#istoric">Istoric</a></li>
+          <li><a href="#portofoliu">Portofoliu</a></li>
+          <li><a href="#certificari">Certificări</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+        <a href="#contact" class="btn btn-primary btn-sm">Cere ofertă</a>
+      </nav>
+
+      <button class="burger" id="burger" type="button" aria-expanded="false" aria-controls="nav-menu" aria-label="Deschide meniul">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <main id="main-content">
+
+    <!-- ============ HERO ============ -->
+    <section class="hero" id="top" aria-labelledby="hero-title">
+      <div class="hero-bg" aria-hidden="true"></div>
+      <div class="container hero-grid">
+        <div class="hero-copy">
+          <p class="eyebrow eyebrow-dark"><span class="dot" aria-hidden="true"></span> Iași · din 2010 · tradiție din 1951</p>
+          <h1 id="hero-title">Partenerul tău în structuri și izolații industriale de <span class="hl">înaltă exigență.</span></h1>
+          <p class="lead">Performanță și know-how de nivel internațional, cu o prezență solidă în Iași din 2010. Construim și izolăm la cele mai înalte standarde de siguranță și eficiență.</p>
+          <div class="hero-cta">
+            <a href="#contact" class="btn btn-primary">Cere ofertă <svg class="i" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+            <a href="#portofoliu" class="btn btn-ghost">Vezi proiecte</a>
+          </div>
+        </div>
+
+        <div class="hero-visual">
+          <figure class="hero-photo">
+            <img src="img/hero-izolatii-conducte.webp" width="705" height="648" fetchpriority="high"
+                 alt="Specialist STIZO verificând conducte industriale izolate cu manta metalică">
+          </figure>
+          <div class="float-card fc-1" aria-hidden="true">
+            <svg class="i" aria-hidden="true"><use href="#i-flame"/></svg>
+            <span><strong>500°C+</strong>izolații turbine</span>
+          </div>
+          <div class="float-card fc-2" aria-hidden="true">
+            <svg class="i" aria-hidden="true"><use href="#i-shield"/></svg>
+            <span><strong>ISO 9001</strong>14001 · 18001</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bandă cu cifre cheie -->
+      <div class="container">
+        <dl class="stats">
+          <div><dt>Rădăcini în izolații industriale</dt><dd>1951</dd></div>
+          <div><dt>Specialiști în echipă</dt><dd><span data-count="100">100</span>+</dd></div>
+          <div><dt>Standarde de management</dt><dd><span data-count="3">3</span> ISO</dd></div>
+          <div><dt>Temperaturi de lucru</dt><dd><span data-count="500">500</span>°C+</dd></div>
+        </dl>
+      </div>
+    </section>
+
+    <!-- ============ SERVICII ============ -->
+    <section class="section" id="servicii" aria-labelledby="servicii-title">
+      <div class="container">
+        <header class="section-head reveal">
+          <p class="eyebrow">Ce facem</p>
+          <h2 id="servicii-title">Trei piloni de expertiză</h2>
+          <p class="section-lead">Exigențe înalte în materie de calitate, o profundă competență și o preocupare intensă — calități pe care clienții noștri se pot baza.</p>
+        </header>
+
+        <div class="bento">
+          <article class="card service service-lg reveal">
+            <div class="service-media">
+              <img src="img/serv-izolatii.webp" width="746" height="326" loading="lazy" decoding="async"
+                   alt="Schimbătoare de căldură industriale cu izolație termică și manta din aluminiu">
+            </div>
+            <div class="service-body">
+              <span class="icon-badge"><svg class="i" aria-hidden="true"><use href="#i-flame"/></svg></span>
+              <h3>Izolații specializate</h3>
+              <p>Termoizolații industriale pentru conducte, rezervoare și turbine la temperaturi de peste 500°C — de la cochilii din fibre minerale și sticlă celulară până la spumă poliuretanică aplicată in situ.</p>
+              <ul class="ticks">
+                <li>Conducte, rezervoare, armături, instalații-cisternă</li>
+                <li>Sisteme de încălzire însoțitoare pe conducte</li>
+                <li>Izolații fonice și protecție contra incendiilor</li>
+                <li>Protecție anticorozivă și izolații la fațade</li>
+              </ul>
+            </div>
+          </article>
+
+          <article class="card service reveal">
+            <div class="service-media">
+              <img src="img/serv-hidro.webp" width="346" height="233" loading="lazy" decoding="async"
+                   alt="Aplicarea prin sudare a membranei bituminoase pe un acoperiș">
+            </div>
+            <div class="service-body">
+              <span class="icon-badge"><svg class="i" aria-hidden="true"><use href="#i-drop"/></svg></span>
+              <h3>Hidroizolații de înaltă exigență</h3>
+              <p class="callout"><strong>90%</strong> din pagubele clădirilor vin din hidroizolare insuficientă.</p>
+              <ul class="ticks">
+                <li>Membrane bituminoase sudabile (poliester / fibră de sticlă)</li>
+                <li>Folii PVC și EPDM rezistente la UV</li>
+                <li>Acoperișuri industriale, terase, bazine, drenaj</li>
+              </ul>
+            </div>
+          </article>
+
+          <article class="card service reveal">
+            <div class="service-media">
+              <img src="img/serv-constructii.webp" width="402" height="255" loading="lazy" decoding="async"
+                   alt="Clădire industrială cu fațadă din panouri roșii, executată la cheie">
+            </div>
+            <div class="service-body">
+              <span class="icon-badge"><svg class="i" aria-hidden="true"><use href="#i-building"/></svg></span>
+              <h3>Construcții &amp; reabilitări</h3>
+              <p>Proiecte civile și industriale noi, „la cheie”, mici și mijlocii.</p>
+              <ul class="ticks">
+                <li>Consolidări și reparații structurale</li>
+                <li>Pardoseli industriale, amenajări interioare</li>
+                <li>Reabilitare fațade și acoperișuri, modernizări de instalații</li>
+              </ul>
+            </div>
+          </article>
+        </div>
+
+        <!-- Procesul de lucru, preluat din mapa de prezentare -->
+        <div class="process reveal">
+          <h3 class="process-title">Prezenți la fața locului, cu prestații după cerințele clientului</h3>
+          <ol class="steps">
+            <li><span>01</span>Evaluare și inventariere</li>
+            <li><span>02</span>Stabilirea cerințelor tehnice</li>
+            <li><span>03</span>Planificare adaptată</li>
+            <li><span>04</span>Instalare profesională</li>
+            <li><span>05</span>Întreținere, reabilitare și mentenanță</li>
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ ISTORIC ============ -->
+    <section class="section section-alt" id="istoric" aria-labelledby="istoric-title">
+      <div class="container history">
+        <header class="section-head history-head reveal">
+          <p class="eyebrow">Cine suntem</p>
+          <h2 id="istoric-title">Șapte decenii de know-how, o echipă locală</h2>
+          <p class="section-lead">STIZO NPC continuă tradiția unuia dintre cele mai vechi trusturi românești de izolații industriale, îmbogățită cu experiența unui grup european.</p>
+          <figure class="history-photo">
+            <img src="img/acoperis-industrial.webp" width="699" height="634" loading="lazy" decoding="async"
+                 alt="Acoperiș industrial cu hidroizolație și luminatoare">
+          </figure>
+        </header>
+
+        <ol class="timeline" id="timeline">
+          <li class="tl-item reveal">
+            <time class="tl-year" datetime="1951">1951</time>
+            <h3>Fondarea Trustului de Lucrări Speciale București</h3>
+            <p>Activitate principală: lucrările de izolații în industria chimică — rădăcinile noastre în izolații industriale.</p>
+          </li>
+          <li class="tl-item reveal">
+            <time class="tl-year" datetime="1990">1990</time>
+            <h3>Restructurare: ia ființă grupul G-STIZO</h3>
+            <p>Trustul se reorganizează și își extinde aria de servicii specializate.</p>
+          </li>
+          <li class="tl-item reveal">
+            <time class="tl-year" datetime="2008">2008</time>
+            <h3>Integrare în VINCI Energies Germania</h3>
+            <p>G+H Isolierung, companie din cadrul VINCI Energies Germania, preia ramura „Izolații” a grupului G-STIZO, care funcționează ca STIZO Industrial Services S.R.L.</p>
+          </li>
+          <li class="tl-item tl-now reveal">
+            <time class="tl-year" datetime="2010">2010</time>
+            <h3>Se înființează STIZO NPC în Iași</h3>
+            <p>Societate independentă care beneficiază de întregul know-how internațional. Astăzi operăm cu un efectiv de <strong>peste 100 de salariați</strong>.</p>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ============ PORTOFOLIU ============ -->
+    <section class="section" id="portofoliu" aria-labelledby="portofoliu-title">
+      <div class="container">
+        <header class="section-head reveal">
+          <p class="eyebrow">Proiecte realizate</p>
+          <h2 id="portofoliu-title">Referințe din Iași</h2>
+          <p class="section-lead">Instituții publice, spitale, școli și clădiri rezidențiale. Apasă pe un proiect pentru galeria foto.</p>
+        </header>
+
+        <div class="filters" role="group" aria-label="Filtrează proiectele">
+          <button type="button" class="chip is-active" data-filter="all" aria-pressed="true">Toate</button>
+          <button type="button" class="chip" data-filter="constructii" aria-pressed="false">Construcții</button>
+          <button type="button" class="chip" data-filter="hidro" aria-pressed="false">Hidroizolații</button>
+          <button type="button" class="chip" data-filter="izolatii" aria-pressed="false">Izolații</button>
+        </div>
+
+        <ul class="projects" id="projects">
+          <li class="project reveal" data-cat="constructii hidro">
+            <button type="button" class="project-btn" data-gallery="isj-1,isj-2,isj-3,isj-4,isj-5,isj-6" data-title="Inspectoratul Școlar Județean Iași">
+              <span class="project-media">
+                <img src="img/isj-1.webp" width="631" height="423" loading="lazy" decoding="async" alt="">
+                <span class="badge">Amenajări &amp; finisaje</span>
+                <span class="project-count"><svg class="i" aria-hidden="true"><use href="#i-images"/></svg>6</span>
+              </span>
+              <span class="project-info">
+                <span class="project-title">Inspectoratul Școlar Județean Iași</span>
+                <span class="project-desc">Amenajări și finisaje premium, izolație terasă</span>
+              </span>
+            </button>
+          </li>
+          <li class="project reveal" data-cat="constructii hidro">
+            <button type="button" class="project-btn" data-gallery="cni-1,cni-2,cni-3,cni-4,cni-5,cni-6,cni-7,cni-8" data-title="Colegiul Național Iași">
+              <span class="project-media">
+                <img src="img/cni-1.webp" width="440" height="330" loading="lazy" decoding="async" alt="">
+                <span class="badge">Reparații capitale</span>
+                <span class="project-count"><svg class="i" aria-hidden="true"><use href="#i-images"/></svg>8</span>
+              </span>
+              <span class="project-info">
+                <span class="project-title">Colegiul Național Iași</span>
+                <span class="project-desc">Reparații capitale și izolație terasă</span>
+              </span>
+            </button>
+          </li>
+          <li class="project reveal" data-cat="hidro">
+            <button type="button" class="project-btn" data-gallery="chimie-1" data-title="Facultatea de Chimie Iași">
+              <span class="project-media">
+                <img src="img/chimie-1.webp" width="1200" height="901" loading="lazy" decoding="async" alt="">
+                <span class="badge">Hidroizolație terasă</span>
+              </span>
+              <span class="project-info">
+                <span class="project-title">Facultatea de Chimie Iași</span>
+                <span class="project-desc">Hidroizolație terasă de anvergură</span>
+              </span>
+            </button>
+          </li>
+          <li class="project reveal" data-cat="izolatii hidro">
+            <button type="button" class="project-btn" data-gallery="spital-1,spital-2,spital-3,spital-4,spital-5" data-title="Spitalul de Recuperare Iași – piscină">
+              <span class="project-media">
+                <img src="img/spital-1.webp" width="1200" height="876" loading="lazy" decoding="async" alt="">
+                <span class="badge">Izolație hidro-termică</span>
+                <span class="project-count"><svg class="i" aria-hidden="true"><use href="#i-images"/></svg>5</span>
+              </span>
+              <span class="project-info">
+                <span class="project-title">Spitalul de Recuperare Iași</span>
+                <span class="project-desc">Izolație hidro-termică piscină</span>
+              </span>
+            </button>
+          </li>
+          <li class="project reveal" data-cat="constructii">
+            <button type="button" class="project-btn" data-gallery="carp-1,carp-2,carp-3,carp-4,carp-5" data-title="Casa de Ajutor Reciproc a Pensionarilor">
+              <span class="project-media">
+                <img src="img/carp-1.webp" width="1200" height="900" loading="lazy" decoding="async" alt="">
+                <span class="badge">Reabilitare &amp; extindere</span>
+                <span class="project-count"><svg class="i" aria-hidden="true"><use href="#i-images"/></svg>5</span>
+              </span>
+              <span class="project-info">
+                <span class="project-title">Casa de Ajutor Reciproc a Pensionarilor</span>
+                <span class="project-desc">Reabilitare, acces cu rampă, amenajări interioare</span>
+              </span>
+            </button>
+          </li>
+          <li class="project reveal" data-cat="constructii">
+            <button type="button" class="project-btn" data-gallery="sgi-1,sgi-2,sgi-3,sgi-4" data-title="Str. Sergent Grigore Ioan, Iași">
+              <span class="project-media">
+                <img src="img/sgi-1.webp" width="312" height="234" loading="lazy" decoding="async" alt="">
+                <span class="badge">Reabilitare</span>
+                <span class="project-count"><svg class="i" aria-hidden="true"><use href="#i-images"/></svg>4</span>
+              </span>
+              <span class="project-info">
+                <span class="project-title">Str. Sergent Grigore Ioan</span>
+                <span class="project-desc">Reabilitare fațade și tâmplărie</span>
+              </span>
+            </button>
+          </li>
+          <li class="project reveal" data-cat="hidro">
+            <button type="button" class="project-btn" data-gallery="lefter-1,lefter-2,lefter-3,lefter-4" data-title="Casa Lefter – Str. Baș Ceauș, Iași">
+              <span class="project-media">
+                <img src="img/lefter-1.webp" width="312" height="234" loading="lazy" decoding="async" alt="">
+                <span class="badge">Hidroizolație</span>
+                <span class="project-count"><svg class="i" aria-hidden="true"><use href="#i-images"/></svg>4</span>
+              </span>
+              <span class="project-info">
+                <span class="project-title">Casa Lefter, Str. Baș Ceauș</span>
+                <span class="project-desc">Hidroizolație acoperiș terasă</span>
+              </span>
+            </button>
+          </li>
+          <li class="project reveal" data-cat="constructii">
+            <button type="button" class="project-btn" data-gallery="copou-1,copou-2,copou-3,copou-4" data-title="Grup sanitar public – Grădina Copou">
+              <span class="project-media">
+                <img src="img/copou-1.webp" width="312" height="234" loading="lazy" decoding="async" alt="">
+                <span class="badge">La cheie</span>
+                <span class="project-count"><svg class="i" aria-hidden="true"><use href="#i-images"/></svg>4</span>
+              </span>
+              <span class="project-info">
+                <span class="project-title">Grup sanitar public Copou</span>
+                <span class="project-desc">Construcție nouă și finisaje</span>
+              </span>
+            </button>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ============ CERTIFICĂRI ============ -->
+    <section class="section section-dark" id="certificari" aria-labelledby="cert-title">
+      <div class="container">
+        <header class="section-head reveal">
+          <p class="eyebrow eyebrow-dark">Standard integrat</p>
+          <h2 id="cert-title">Un sistem de management integrat, pentru siguranța dumneavoastră</h2>
+        </header>
+        <ul class="certs">
+          <li class="cert reveal">
+            <span class="seal" aria-hidden="true"><svg class="i"><use href="#i-check"/></svg></span>
+            <p class="cert-code">SR EN ISO 9001</p>
+            <h3>Calitate</h3>
+            <p>Procese controlate și îmbunătățire continuă pe fiecare lucrare.</p>
+          </li>
+          <li class="cert reveal">
+            <span class="seal" aria-hidden="true"><svg class="i"><use href="#i-leaf"/></svg></span>
+            <p class="cert-code">SR EN ISO 14001</p>
+            <h3>Protecția mediului</h3>
+            <p>Materiale compatibile cu mediul și folosirea rațională a resurselor.</p>
+          </li>
+          <li class="cert reveal">
+            <span class="seal" aria-hidden="true"><svg class="i"><use href="#i-hat"/></svg></span>
+            <p class="cert-code">SR OHSAS 18001</p>
+            <h3>Sănătate și securitate operațională</h3>
+            <p>Proceduri stricte de siguranță pe șantier și în mediul industrial.</p>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ============ CONTACT ============ -->
+    <section class="section" id="contact" aria-labelledby="contact-title">
+      <div class="container contact">
+        <div class="contact-form-wrap reveal">
+          <p class="eyebrow">Contact rapid</p>
+          <h2 id="contact-title">Cere o ofertă</h2>
+          <p class="section-lead">Descrie-ne pe scurt lucrarea. Venim la fața locului pentru evaluare.</p>
+
+          <!-- Web3Forms: înlocuiește valoarea access_key cu cheia primită pe web3forms.com -->
+          <form class="form" id="contact-form" action="https://api.web3forms.com/submit" method="POST" novalidate>
+            <input type="hidden" name="access_key" value="YOUR_ACCESS_KEY_HERE">
+            <input type="hidden" name="subject" value="Cerere ofertă – site STIZO NPC">
+            <input type="hidden" name="from_name" value="Site STIZO NPC">
+
+            <!-- Honeypot: oamenii nu-l văd, roboții îl completează -->
+            <div class="hp" aria-hidden="true">
+              <label for="f-company-site">Nu completați</label>
+              <input type="text" id="f-company-site" name="botcheck" tabindex="-1" autocomplete="off">
+            </div>
+
+            <div class="form-row">
+              <div class="field">
+                <label for="f-name">Nume <span class="req" aria-hidden="true">*</span></label>
+                <input id="f-name" name="name" type="text" autocomplete="name" required>
+              </div>
+              <div class="field">
+                <label for="f-phone">Telefon <span class="req" aria-hidden="true">*</span></label>
+                <input id="f-phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" pattern="[0-9 +().\-]{9,}" required>
+              </div>
+            </div>
+            <div class="field">
+              <label for="f-email">Email <span class="req" aria-hidden="true">*</span></label>
+              <input id="f-email" name="email" type="email" autocomplete="email" required>
+            </div>
+            <div class="field">
+              <label for="f-msg">Mesaj <span class="req" aria-hidden="true">*</span></label>
+              <textarea id="f-msg" name="message" rows="5" required placeholder="Tipul lucrării, suprafața aproximativă, localitatea…"></textarea>
+            </div>
+            <div class="check">
+              <input id="f-gdpr" name="gdpr" type="checkbox" required>
+              <label for="f-gdpr">Sunt de acord cu prelucrarea datelor conform <a href="politica-confidentialitate.html">Politicii de confidențialitate</a>.</label>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block">Trimite cererea <svg class="i" aria-hidden="true"><use href="#i-arrow"/></svg></button>
+            <p class="form-status" id="form-status" role="status" aria-live="polite"></p>
+          </form>
+        </div>
+
+        <aside class="contact-card reveal" aria-label="Date de contact">
+          <h3>STIZO NPC S.R.L.</h3>
+          <ul class="contact-list">
+            <li>
+              <span class="icon-badge"><svg class="i" aria-hidden="true"><use href="#i-pin"/></svg></span>
+              <span><strong>Adresă</strong>Str. Manta Roșie nr. 17 (în incinta SC Electroconstrucția-ELCO SA), Iași</span>
+            </li>
+            <li>
+              <span class="icon-badge"><svg class="i" aria-hidden="true"><use href="#i-phone"/></svg></span>
+              <span><strong>Telefon / fax</strong><a href="tel:+40232230330">0232 230 330</a></span>
+            </li>
+            <li>
+              <span class="icon-badge"><svg class="i" aria-hidden="true"><use href="#i-phone"/></svg></span>
+              <span><strong>Mobil</strong><a href="tel:+40744542521">0744 542 521</a></span>
+            </li>
+            <li>
+              <span class="icon-badge"><svg class="i" aria-hidden="true"><use href="#i-mail"/></svg></span>
+              <span><strong>Email</strong><a href="mailto:office@stizo-npc.ro">office@stizo-npc.ro</a></span>
+            </li>
+          </ul>
+          <a class="btn btn-ghost-dark btn-block" href="https://www.google.com/maps/search/?api=1&amp;query=Strada+Manta+Ro%C8%99ie+17+Ia%C8%99i" target="_blank" rel="noopener noreferrer">
+            Deschide în Google Maps <svg class="i" aria-hidden="true"><use href="#i-arrow"/></svg>
+          </a>
+        </aside>
+      </div>
+    </section>
+  </main>
+
+  <!-- ============ FOOTER ============ -->
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <a href="#top" class="logo logo-footer" aria-label="STIZO NPC – început de pagină">
+          <span class="logo-mark" aria-hidden="true"><span></span><span></span><span></span></span>
+          <span class="logo-text">
+            <span class="logo-name">STIZO<b>NPC</b></span>
+            <span class="logo-tag">Structuri &amp; Izolații | Iași</span>
+          </span>
+        </a>
+        <p class="footer-about">Izolații termice, hidroizolații și construcții civile și industriale. Know-how internațional, echipă locală.</p>
+      </div>
+      <nav aria-label="Navigare subsol">
+        <h2 class="footer-h">Navigare</h2>
+        <ul class="footer-links">
+          <li><a href="#servicii">Servicii</a></li>
+          <li><a href="#istoric">Istoric</a></li>
+          <li><a href="#portofoliu">Portofoliu</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </nav>
+      <nav aria-label="Informații legale">
+        <h2 class="footer-h">Legal</h2>
+        <ul class="footer-links">
+          <li><a href="politica-confidentialitate.html">Politica de confidențialitate</a></li>
+          <li><a href="politica-cookies.html">Politica de cookies</a></li>
+          <li><button type="button" class="link-btn" data-open-cookies>Preferințe cookie</button></li>
+        </ul>
+      </nav>
+      <!-- Pictograme ANPC SAL/SOL (Ordin ANPC 449/2022) – înlocuiește cu imaginile oficiale de pe anpc.ro -->
+      <div class="anpc">
+        <a href="https://reclamatiisal.anpc.ro/" target="_blank" rel="noopener noreferrer" class="anpc-badge">
+          <small>ANPC</small><strong>SAL</strong><span>Soluționarea alternativă a litigiilor</span>
+        </a>
+        <a href="https://ec.europa.eu/consumers/odr" target="_blank" rel="noopener noreferrer" class="anpc-badge">
+          <small>UE</small><strong>SOL</strong><span>Soluționarea online a litigiilor</span>
+        </a>
+      </div>
+    </div>
+    <!-- Identificare comercială – Legea 365/2002, art. 5 -->
+    <div class="container footer-legal">
+      <p><strong>S.C. STIZO NPC S.R.L.</strong> · CUI: <mark>[de completat]</mark> · Nr. Reg. Com.: <mark>[J22/…/2010]</mark> · Sediu: Str. Manta Roșie nr. 17, Iași · Tel. 0232 230 330 · office@stizo-npc.ro</p>
+      <p>© <span id="year">2026</span> STIZO NPC S.R.L. Toate drepturile rezervate.</p>
+    </div>
+  </footer>
+
+  <!-- ============ GALERIE (lightbox nativ cu <dialog>) ============ -->
+  <dialog class="lightbox" id="lightbox" aria-labelledby="lb-title">
+    <div class="lb-top">
+      <p class="lb-title" id="lb-title"></p>
+      <p class="lb-counter" id="lb-counter" aria-live="polite"></p>
+      <button type="button" class="lb-btn" data-lb="close" aria-label="Închide galeria"><svg class="i" aria-hidden="true"><use href="#i-x"/></svg></button>
+    </div>
+    <figure class="lb-stage">
+      <img id="lb-img" src="" alt="">
+    </figure>
+    <button type="button" class="lb-btn lb-prev" data-lb="prev" aria-label="Fotografia anterioară"><svg class="i" aria-hidden="true"><use href="#i-left"/></svg></button>
+    <button type="button" class="lb-btn lb-next" data-lb="next" aria-label="Fotografia următoare"><svg class="i" aria-hidden="true"><use href="#i-right"/></svg></button>
+  </dialog>
+
+  <!-- ============ CONSIMȚĂMÂNT COOKIE (granular) ============ -->
+  <section class="cookie" id="cookie" aria-labelledby="cookie-title" hidden>
+    <h2 id="cookie-title">Preferințe cookie</h2>
+    <p>Folosim doar cookie-uri strict necesare. Categoriile de mai jos se activează numai cu acordul tău. <a href="politica-cookies.html">Detalii</a></p>
+    <form class="cookie-form" id="cookie-form">
+      <div class="cookie-actions">
+        <button type="button" class="btn btn-ghost-dark btn-sm" data-consent="reject">Refuz opționale</button>
+        <button type="button" class="btn btn-ghost-dark btn-sm" data-consent="all">Accept tot</button>
+      </div>
+      <details class="cookie-more">
+        <summary>Personalizează</summary>
+        <label class="toggle"><input type="checkbox" checked disabled> <span>Necesare</span><small>mereu active</small></label>
+        <label class="toggle"><input type="checkbox" name="analytics"> <span>Analitice</span><small>statistici anonime de trafic</small></label>
+        <label class="toggle"><input type="checkbox" name="marketing"> <span>Marketing</span><small>reclame personalizate</small></label>
+        <button type="submit" class="btn btn-primary btn-sm btn-block">Salvează alegerea</button>
+      </details>
+    </form>
+  </section>
+  <button type="button" class="cookie-fab" data-open-cookies aria-label="Preferințe cookie" hidden>
+    <svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 1 0 10 10 4 4 0 0 1-5-5 4 4 0 0 1-5-5"/><path d="M8.5 8.5h.01M16 15.5h.01M12 12h.01M11 17h.01M7 14h.01"/></svg>
+  </button>
+</body>
+</html>

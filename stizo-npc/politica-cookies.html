@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Politica de cookies – STIZO NPC Iași</title>
+  <meta name="description" content="Ce cookie-uri și ce stocare locală folosește site-ul STIZO NPC, în ce scop și cum îți poți modifica oricând preferințele.">
+  <meta name="theme-color" content="#111827">
+  <link rel="canonical" href="https://www.stizo-npc.ro/politica-cookies.html">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; script-src 'self'; base-uri 'self'">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/main.js" defer></script>
+</head>
+<body>
+  <a href="#main-content" class="skip-link">Sari la conținutul principal</a>
+  <header class="site-header is-scrolled">
+    <div class="container nav">
+      <a href="index.html" class="logo" aria-label="STIZO NPC – pagina principală">
+        <span class="logo-mark" aria-hidden="true"><span></span><span></span><span></span></span>
+        <span class="logo-text"><span class="logo-name">STIZO<b>NPC</b></span><span class="logo-tag">Structuri &amp; Izolații | Iași</span></span>
+      </a>
+      <a href="index.html#contact" class="btn btn-primary btn-sm">Cere ofertă</a>
+    </div>
+  </header>
+
+  <main id="main-content" class="page">
+    <article class="container prose">
+      <h1>Politica de cookies</h1>
+      <p>Ultima actualizare: <mark>[data publicării]</mark>.</p>
+
+      <h2>Ce folosim în prezent</h2>
+      <ul>
+        <li><strong>Strict necesare:</strong> o singură intrare în stocarea locală a browserului (<code>stizo-consent-v1</code>), care reține alegerea ta privind cookie-urile. Nu conține date personale și nu se trimite către server.</li>
+        <li><strong>Fonturi:</strong> fontul Inter este încărcat de la Google Fonts, care primește adresa IP a browserului pentru livrarea fișierului.</li>
+      </ul>
+
+      <h2>Categorii opționale</h2>
+      <p>Categoriile <strong>Analitice</strong> și <strong>Marketing</strong> sunt dezactivate implicit. În prezent site-ul nu încarcă niciun script din aceste categorii. Dacă vom adăuga, de exemplu, statistici de trafic, acestea vor porni doar după ce le accepți explicit.</p>
+
+      <h2>Cum îți schimbi preferințele</h2>
+      <p>Oricând, din butonul rotund din colțul stânga-jos al paginii sau de aici:</p>
+      <p><button type="button" class="btn btn-primary" data-open-cookies>Deschide preferințele cookie</button></p>
+      <p>Poți șterge oricând datele stocate din setările browserului.</p>
+
+      <p><a href="index.html">← Înapoi la pagina principală</a></p>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-legal">
+      <p><strong>S.C. STIZO NPC S.R.L.</strong> · CUI: <mark>[de completat]</mark> · Nr. Reg. Com.: <mark>[J22/…/2010]</mark> · Str. Manta Roșie nr. 17, Iași · 0232 230 330 · office@stizo-npc.ro</p>
+      <p>© <span id="year">2026</span> STIZO NPC S.R.L.</p>
+    </div>
+  </footer>
+
+  <section class="cookie" id="cookie" aria-labelledby="cookie-title" hidden>
+    <h2 id="cookie-title">Preferințe cookie</h2>
+    <p>Folosim doar cookie-uri strict necesare. Categoriile de mai jos se activează numai cu acordul tău.</p>
+    <form class="cookie-form" id="cookie-form">
+      <div class="cookie-actions">
+        <button type="button" class="btn btn-ghost-dark btn-sm" data-consent="reject">Refuz opționale</button>
+        <button type="button" class="btn btn-ghost-dark btn-sm" data-consent="all">Accept tot</button>
+      </div>
+      <details class="cookie-more">
+        <summary>Personalizează</summary>
+        <label class="toggle"><input type="checkbox" checked disabled> <span>Necesare</span><small>mereu active</small></label>
+        <label class="toggle"><input type="checkbox" name="analytics"> <span>Analitice</span><small>statistici anonime de trafic</small></label>
+        <label class="toggle"><input type="checkbox" name="marketing"> <span>Marketing</span><small>reclame personalizate</small></label>
+        <button type="submit" class="btn btn-primary btn-sm btn-block">Salvează alegerea</button>
+      </details>
+    </form>
+  </section>
+  <button type="button" class="cookie-fab" data-open-cookies aria-label="Preferințe cookie" hidden>
+    <svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 1 0 10 10 4 4 0 0 1-5-5 4 4 0 0 1-5-5"/><path d="M8.5 8.5h.01M16 15.5h.01M12 12h.01M11 17h.01M7 14h.01"/></svg>
+  </button>
+</body>
+</html>
