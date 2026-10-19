@@ -760,6 +760,79 @@ section { padding-block: 5.5rem; }
   margin-top: .5rem;
 }
 
+/* ── PARTENERI ──────────────────────────────────────────────── */
+.partners {
+  background: var(--bg-0);
+  padding: 4rem 1.75rem 3.5rem;
+  border-top: 1px solid var(--glass-b);
+}
+.partners-title {
+  text-align: center;
+  font-family: var(--f-head);
+  font-size: .7rem;
+  font-weight: 600;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--fg-low);
+  margin-bottom: 2.25rem;
+}
+.partners-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
+  max-width: 900px;
+  margin: 0 auto;
+}
+.partner-card {
+  background: var(--glass);
+  border: 1px solid var(--glass-b);
+  border-radius: 12px;
+  padding: 1.1rem 1.5rem;
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+  flex-direction: column;
+  gap: .25rem;
+  min-width: 160px;
+  max-width: 200px;
+  flex: 1 1 160px;
+  transition: border-color .25s, transform .25s, box-shadow .25s;
+  backdrop-filter: blur(8px);
+}
+.partner-card:hover {
+  border-color: rgba(0,195,255,.35);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(0,195,255,.08);
+}
+.partner-name {
+  font-family: var(--f-head);
+  font-size: .88rem;
+  font-weight: 700;
+  color: var(--fg);
+  letter-spacing: .02em;
+}
+.partner-tag {
+  font-family: var(--f-body);
+  font-size: .75rem;
+  color: var(--fg-mid);
+  line-height: 1.35;
+}
+.partner-arrow {
+  margin-top: .6rem;
+  font-size: .72rem;
+  color: var(--accent);
+  font-family: var(--f-head);
+  letter-spacing: .04em;
+  opacity: 0;
+  transition: opacity .2s;
+}
+.partner-card:hover .partner-arrow { opacity: 1; }
+@media (max-width: 600px) {
+  .partners-grid { gap: .75rem; }
+  .partner-card { min-width: 140px; padding: .9rem 1.1rem; }
+}
+
 /* ── FOOTER ─────────────────────────────────────────────────── */
 footer {
   background: var(--bg-0);
@@ -1424,6 +1497,38 @@ footer a:hover { color: var(--accent); }
   <button class="lb-close" id="lb-close" aria-label="Închide">✕</button>
   <img id="lb-img" src="" alt="">
 </div>
+
+<!-- ══════════════════ PARTENERI ══════════════════════════════ -->
+<section class="partners">
+  <p class="partners-title rv">Parteneri &amp; Colaboratori</p>
+  <div class="partners-grid">
+    <a class="partner-card rv" href="https://www.pandapc.ro" target="_blank" rel="noopener">
+      <span class="partner-name">PandaPC.ro</span>
+      <span class="partner-tag">Construim cu AI. Explicăm simplu.</span>
+      <span class="partner-arrow">Vizitează →</span>
+    </a>
+    <a class="partner-card rv" href="https://www.atilibiduri.ro" target="_blank" rel="noopener">
+      <span class="partner-name">Atilibiduri.ro</span>
+      <span class="partner-tag">Handmade cu suflet · Iași</span>
+      <span class="partner-arrow">Vizitează →</span>
+    </a>
+    <a class="partner-card rv" href="https://asociatianicolaus.ro/" target="_blank" rel="noopener">
+      <span class="partner-name">Asociația Nicolaus</span>
+      <span class="partner-tag">Așezământ pentru persoane aflate în dificultate</span>
+      <span class="partner-arrow">Vizitează →</span>
+    </a>
+    <a class="partner-card rv" href="https://www.nitro-auto.ro" target="_blank" rel="noopener">
+      <span class="partner-name">Nitro-Auto.ro</span>
+      <span class="partner-tag">Site-ul de mașini bune</span>
+      <span class="partner-arrow">Vizitează →</span>
+    </a>
+    <a class="partner-card rv" href="https://www.stizo-npc.ro" target="_blank" rel="noopener">
+      <span class="partner-name">Stizo-NPC.ro</span>
+      <span class="partner-tag">Partenerul tău în structuri și izolații</span>
+      <span class="partner-arrow">Vizitează →</span>
+    </a>
+  </div>
+</section>
 
 <footer>
   <p>© 2026 S.C. MCS Nanotechnology S.R.L. · Iași · Toate drepturile rezervate</p>
