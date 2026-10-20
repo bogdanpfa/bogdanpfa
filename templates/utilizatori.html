@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% from '_macro.html' import csrf with context %}
+{% block titlu %}Utilizatori{% endblock %}
+{% block continut %}
+<h1>Utilizatori aplicație</h1>
+{% if grupuri %}<div class="mesaj info">🔒 Acces restricționat la grupul AD: <b>{{ grupuri|join(', ') }}</b>.
+  Membrii intră direct cu contul de domeniu și apar aici automat la prima logare, cu rolul „{{ ROLURI[rol_grup] }}“.
+  <a href="{{ url_for('main.setari') }}">Modificați regula</a></div>
+{% else %}<div class="mesaj info">Orice utilizator AD cu credențiale valide primește acces automat la prima logare (rol: Administrator).
+  Pentru a restricționa accesul la un grup specific, configurați în <a href="{{ url_for('main.setari') }}">Setări → Acces în aplicație</a>.</div>{% endif %}
+<div class="tabel-wrap"><table>
+  <thead><tr><th>Utilizator</th><th>Nume</th><th>Rol</th><th>Tip</th><th>Ultima logare</th><th>Stare</th><th>Acțiuni</th></tr></thead>
+  <tbody>
+  {% for u in utilizatori %}
+  <tr>
+    <td class="mono">{{ u.username }}</td><td>{{ u.nume }}</td>
+    <td>{% if u.id == user.id %}{{ ROLURI[u.rol] }}{% else %}
+      <form class="inline" method="post" action="{{ url_for('main.utilizator_actiune', uid=u.id, actiune='rol') }}">{{ csrf() }}
+        <select name="rol" onchange="this.form.requestSubmit()" aria-label="Rol {{ u.username }}">{% for k, v in ROLURI.items() %}<option value="{{ k }}" {{ 'selected' if k == u.rol }}>{{ v }}</option>{% endfor %}</select></form>{% endif %}</td>
+    <td>{{ 'domeniu' if u.tip_auth == 'ad' else 'local' }}</td>
+    <td>{{ u.ultima_logare|data or '—' }}</td>
+    <td>{{ 'activ' if u.activ else 'dezactivat' }}{% if u.blocat_pana %}<br><span class="al-critic mic">blocat până {{ u.blocat_pana|data }}</span>{% endif %}</td>
+    <td style="white-space:nowrap">
+      {% if u.id != user.id %}<form class="inline" method="post" action="{{ url_for('main.utilizator_actiune', uid=u.id, actiune='comuta') }}">{{ csrf() }}<button class="secundar mic">{{ 'Dezactivează' if u.activ else 'Activează' }}</button></form>{% endif %}
+      {% if u.blocat_pana %}<form class="inline" method="post" action="{{ url_for('main.utilizator_actiune', uid=u.id, actiune='deblocheaza') }}">{{ csrf() }}<button class="secundar mic">Deblochea ză</button></form>{% endif %}
+      {% if u.tip_auth == 'local' %}<form class="inline" method="post" action="{{ url_for('main.utilizator_actiune', uid=u.id, actiune='parola') }}" data-confirm="Setați parola nouă pentru {{ u.username }}?">{{ csrf() }}
+        <input type="password" name="parola" minlength="10" required placeholder="parolă nouă" style="width:140px" autocomplete="new-password"><button class="secundar mic">Setează</button></form>{% endif %}
+    </td>
+  </tr>
+  {% endfor %}
+  </tbody></table></div>
+{% endblock %}
